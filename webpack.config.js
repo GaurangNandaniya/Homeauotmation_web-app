@@ -52,6 +52,21 @@ module.exports = {
     static: path.resolve(__dirname, "dist"), // Set the directory to serve static assets
     hot: true, // Enable hot module replacement
     historyApiFallback: true, // Enable HTML5 routing
+    host: "0.0.0.0",
     port: 3000,
+    client: {
+      progress: true,
+    },
+  },
+  watch: true,
+  watchOptions: {
+    aggregateTimeout: 2000,
+    poll: 5000,
+    ignored: /node_modules/,
+  },
+  stats: {
+    env: true,
+    colors: true,
+    builtAt: true,
   },
 };
