@@ -9,7 +9,7 @@ const RootPage = (props) => {
   ) : (
     <>
       <AuthButtons />
-      <h1>Homeautomation</h1>;
+      <h1>Homeautomation</h1>
     </>
   );
 };
