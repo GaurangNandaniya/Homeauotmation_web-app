@@ -16,6 +16,13 @@ export const signUpUser = async ({ email, firstName, lastName, password }) => {
           lastName,
         },
       },
+      // path: "noauth/state",
+      // requestBody: {
+      //   switchDetails: {
+      //     switchId: "SWITCH_6",
+      //     state: "OFF",
+      //   },
+      // },
     });
     return response;
   } catch (error) {
