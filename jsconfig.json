@@ -1,0 +1,16 @@
+{
+    "compileOnSave": true,
+    "compilerOptions":{
+      "module": "CommonJS",
+      "target": "ES6",
+      "baseUrl": ".",
+      "paths": {
+        "commonComponents": ["./src/commonComponents"],
+        "utils/*": ["./src/utils/*"],
+        "hooks/*": ["./src/hooks/*"],
+        "RootPage/*":["./src/routes/*"]
+      }
+    },
+    "exclude": ["node_modules", "build","dist"],
+    "include": ["./src/**/*"]
+  }

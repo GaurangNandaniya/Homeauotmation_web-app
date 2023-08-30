@@ -1,7 +1,12 @@
-import { fetchDataFromApi } from "../../utils/api";
-import { generatePassword } from "../../utils/stringUtils";
+import { fetchDataFromApi } from "utils/api";
+import { generatePassword } from "utils/stringUtils";
 
-export const signUpUser = async ({ email, firstName, lastName, password }) => {
+export const signUpUser = async ({
+  email,
+  firstName,
+  lastName,
+  password = "",
+}) => {
   if (!password) {
     password = generatePassword();
   }

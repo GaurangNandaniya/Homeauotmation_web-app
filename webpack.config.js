@@ -1,6 +1,9 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const {
+  generateWebpackAliasesFromJsConfig,
+} = require("./Scripts/generateWebpackPathResolve");
 
 module.exports = {
   entry: "./src/index.js",
@@ -58,6 +61,7 @@ module.exports = {
       progress: true,
     },
   },
+  //it will watch for changes in file and recompile
   watch: true,
   watchOptions: {
     aggregateTimeout: 2000,
@@ -68,5 +72,11 @@ module.exports = {
     env: true,
     colors: true,
     builtAt: true,
+    errorDetails:true
+  },
+  resolve: {
+    alias: {
+      ...generateWebpackAliasesFromJsConfig(),
+    },
   },
 };
