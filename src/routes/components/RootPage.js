@@ -5,13 +5,16 @@ import { getUserInfo, setUserInfo } from "utils/localStorageUtils";
 import { isJWTExpired } from "utils/jwtUtils";
 import _ from "lodash";
 import { AppContext } from "contextAPI/contextAPI";
-import { UPDATE_ROUTE_INFO } from "contextAPI/reducerActions";
+import { HIDE_TOASTER, UPDATE_ROUTE_INFO } from "contextAPI/reducerActions";
+import { Alert, Snackbar } from "@mui/material";
 
 const RootPage = (props) => {
   const childComp = useOutlet();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { state, dispatch } = useContext(AppContext);
+  const { toaster } = state;
+  const { isOpen, severity, toasterStyle, autoHideDuration, message } = toaster;
 
   useEffect(() => {
     const userInfo = getUserInfo();
@@ -46,12 +49,29 @@ const RootPage = (props) => {
     }
   }, [pathname]);
 
-  return childComp ? (
-    childComp
-  ) : (
+  const onCloseToaster = () => {
+    dispatch({ type: HIDE_TOASTER });
+  };
+
+  return (
     <>
-      <AuthButtons />
-      <h1>Homeautomation</h1>
+      {childComp ? (
+        childComp
+      ) : (
+        <>
+          <AuthButtons />
+          <h1>Homeautomation</h1>
+        </>
+      )}
+      <Snackbar
+        open={isOpen}
+        autoHideDuration={autoHideDuration}
+        onClose={onCloseToaster}
+      >
+        <Alert onClose={onCloseToaster} severity={severity} sx={toasterStyle}>
+          {message}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

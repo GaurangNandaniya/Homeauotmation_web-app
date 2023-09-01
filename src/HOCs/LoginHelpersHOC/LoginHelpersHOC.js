@@ -4,7 +4,7 @@ import { setUserInfo } from "utils/localStorageUtils";
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "contextAPI/contextAPI";
-import { UPDATE_USER_INFO } from "contextAPI/reducerActions";
+import { SHOW_TOASTER, UPDATE_USER_INFO } from "contextAPI/reducerActions";
 
 const LoginHelpersHOC = (WrapperComp) => {
   const LoginHelpers = (props) => {
@@ -37,6 +37,13 @@ const LoginHelpersHOC = (WrapperComp) => {
         value: { userId, firstName, lastName, email, token: response.token },
       });
       navigate("/");
+      dispatch({
+        type: SHOW_TOASTER,
+        value: {
+          message: "Logged in successfully!",
+          severity: "success",
+        },
+      });
     };
 
     return (

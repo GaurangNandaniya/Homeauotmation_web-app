@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { GoogleLoginWrapper, Loader } from "commonComponents";
 import { signUpUser } from "RootPage/modules/Module";
 import { LoginHelpersHOC } from "HOCs";
+import { SHOW_TOASTER } from "contextAPI/reducerActions";
 
 const SignUp = (props) => {
   const { loginUser } = props;
@@ -22,8 +23,13 @@ const SignUp = (props) => {
     setIsLoading(false);
 
     if (success) {
-      //show toast for signup success
-      //show toast for logging in
+      dispatch({
+        type: SHOW_TOASTER,
+        value: {
+          message: "Signup successful!",
+          severity: "success",
+        },
+      });
       setIsLoading(true);
       await loginUser({
         email,
@@ -34,7 +40,13 @@ const SignUp = (props) => {
       });
       setIsLoading(false);
     } else {
-      //show error msg in toast
+      dispatch({
+        type: SHOW_TOASTER,
+        value: {
+          message: message,
+          severity: "error",
+        },
+      });
     }
   };
 
