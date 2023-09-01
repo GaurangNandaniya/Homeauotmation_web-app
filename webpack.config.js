@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 const {
   generateWebpackAliasesFromJsConfig,
 } = require("./Scripts/generateWebpackPathResolve");
@@ -72,7 +73,7 @@ module.exports = {
     env: true,
     colors: true,
     builtAt: true,
-    errorDetails:true
+    errorDetails: true,
   },
   resolve: {
     alias: {

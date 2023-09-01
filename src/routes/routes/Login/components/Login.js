@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { GoogleLoginWrapper, Loader } from "commonComponents";
-import { loginUser } from "RootPage/modules/Module";
-import { setUserInfo } from "utils/localStorageUtils";
-import jwtDecode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { LoginHelpersHOC } from "HOCs";
 
-const Login = () => {
+const Login = (props) => {
+  const { loginUser } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+
   const onSuccess = async ({
     email,
     firstName,
@@ -15,10 +13,8 @@ const Login = () => {
     password = "",
     isGoogleAuth = false,
   }) => {
-    //show toast for signup success
-    //show toast for logging in
     setIsLoading(true);
-    const response = await loginUser({
+    await loginUser({
       email,
       firstName,
       isGoogleAuth,
@@ -26,11 +22,6 @@ const Login = () => {
       password,
     });
     setIsLoading(false);
-    const { userId } = jwtDecode(response.token);
-    setUserInfo({
-      userInfo: { userId, firstName, lastName, email, token: response.token },
-    });
-    navigate("/");
   };
 
   const onError = (...args) => {
@@ -40,9 +31,9 @@ const Login = () => {
   return (
     <>
       {isLoading && <Loader />}
-      <GoogleLoginWrapper onSuccess={onSuccess} onError={onError} />;
+      <GoogleLoginWrapper onSuccess={onSuccess} onError={onError} />
     </>
   );
 };
 
-export default Login;
+export default LoginHelpersHOC(Login);

@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { GoogleLoginWrapper, Loader } from "commonComponents";
-import { signUpUser, loginUser } from "RootPage/modules/Module";
-import { setUserInfo } from "utils/localStorageUtils";
-import jwtDecode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { signUpUser } from "RootPage/modules/Module";
+import { LoginHelpersHOC } from "HOCs";
 
-const SignUp = () => {
+const SignUp = (props) => {
+  const { loginUser } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
   const onSuccess = async ({
     email,
     firstName,
@@ -27,7 +25,7 @@ const SignUp = () => {
       //show toast for signup success
       //show toast for logging in
       setIsLoading(true);
-      const response = await loginUser({
+      await loginUser({
         email,
         firstName,
         isGoogleAuth,
@@ -35,11 +33,6 @@ const SignUp = () => {
         password,
       });
       setIsLoading(false);
-      const { userId } = jwtDecode(response.token);
-      setUserInfo({
-        userInfo: { userId, firstName, lastName, email, token: response.token },
-      });
-      navigate("/");
     } else {
       //show error msg in toast
     }
@@ -57,4 +50,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default LoginHelpersHOC(SignUp);

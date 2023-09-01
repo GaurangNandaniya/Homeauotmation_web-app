@@ -13,3 +13,11 @@ export const setUserInfo = ({ userInfo }) => {
 export const getUserInfo = () => {
   return getInfoFromLocalStorage({ key: "userInfo" });
 };
+
+export const setUserRoute = ({ routeInfo }) => {
+  setInfoInLocalStorage({ key: "routeInfo", value: routeInfo });
+};
+
+export const getUserRouteInfo = () => {
+  return getInfoFromLocalStorage({ key: "routeInfo" });
+};

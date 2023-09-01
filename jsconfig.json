@@ -8,7 +8,10 @@
         "commonComponents": ["./src/commonComponents"],
         "utils/*": ["./src/utils/*"],
         "hooks/*": ["./src/hooks/*"],
-        "RootPage/*":["./src/routes/*"]
+        "RootPage/*":["./src/routes/*"],
+        "constants/*":["./src/constants/*"],
+        "contextAPI/*":["./src/contextAPI/*"],
+        "HOCs":["./src/HOCs"]
       }
     },
     "exclude": ["node_modules", "build","dist"],
