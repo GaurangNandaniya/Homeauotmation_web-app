@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import classes from "./UserHomes.scss";
-import { Alert, Snackbar } from "@mui/material";
 import { AppContext } from "contextAPI/contextAPI";
 import { SHOW_TOASTER } from "contextAPI/reducerActions";
 

@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { GoogleLoginWrapper, Loader } from "commonComponents";
 import { signUpUser } from "RootPage/modules/Module";
 import { LoginHelpersHOC } from "HOCs";
 import { SHOW_TOASTER } from "contextAPI/reducerActions";
+import { AppContext } from "contextAPI/contextAPI";
 
 const SignUp = (props) => {
   const { loginUser } = props;
   const [isLoading, setIsLoading] = useState(false);
+  const { dispatch } = useContext(AppContext);
+
   const onSuccess = async ({
     email,
     firstName,

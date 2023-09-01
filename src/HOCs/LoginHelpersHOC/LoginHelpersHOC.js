@@ -10,6 +10,7 @@ const LoginHelpersHOC = (WrapperComp) => {
   const LoginHelpers = (props) => {
     const { dispatch } = useContext(AppContext);
     const navigate = useNavigate();
+
     const loginUserCall = async ({
       email,
       firstName,
@@ -17,9 +18,6 @@ const LoginHelpersHOC = (WrapperComp) => {
       password = "",
       isGoogleAuth = false,
     }) => {
-      //show toast for signup success
-      //show toast for logging in
-
       const response = await loginUser({
         email,
         firstName,
@@ -34,7 +32,14 @@ const LoginHelpersHOC = (WrapperComp) => {
       });
       dispatch({
         type: UPDATE_USER_INFO,
-        value: { userId, firstName, lastName, email, token: response.token },
+        value: {
+          userId,
+          firstName,
+          lastName,
+          email,
+          token: response.token,
+          isLoggedIn: true,
+        },
       });
       navigate("/");
       dispatch({
@@ -46,9 +51,31 @@ const LoginHelpersHOC = (WrapperComp) => {
       });
     };
 
+    const onLogoutUser = () => {
+      setUserInfo({
+        userInfo: {},
+      });
+      dispatch({
+        type: SHOW_TOASTER,
+        value: {
+          message: "Logged out successfully!",
+          severity: "success",
+        },
+      });
+      dispatch({
+        type: UPDATE_USER_INFO,
+        value: {},
+      });
+      navigate("/");
+    };
+
     return (
       <>
-        <WrapperComp {...props} loginUser={loginUserCall} />
+        <WrapperComp
+          {...props}
+          loginUser={loginUserCall}
+          logoutUser={onLogoutUser}
+        />
       </>
     );
   };

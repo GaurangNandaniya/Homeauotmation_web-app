@@ -1,20 +1,34 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
+import classes from "./RootPage.scss";
 import AuthButtons from "./AuthButtons";
 import { useOutlet, useNavigate, useLocation } from "react-router-dom";
 import { getUserInfo, setUserInfo } from "utils/localStorageUtils";
 import { isJWTExpired } from "utils/jwtUtils";
 import _ from "lodash";
 import { AppContext } from "contextAPI/contextAPI";
-import { HIDE_TOASTER, UPDATE_ROUTE_INFO } from "contextAPI/reducerActions";
-import { Alert, Snackbar } from "@mui/material";
+import {
+  HIDE_TOASTER,
+  UPDATE_ROUTE_INFO,
+  UPDATE_USER_INFO,
+} from "contextAPI/reducerActions";
+import { Alert, AppBar, Button, Snackbar, Typography } from "@mui/material";
+import { LoginHelpersHOC } from "HOCs";
+import { Loader } from "commonComponents";
 
 const RootPage = (props) => {
+  const { logoutUser } = props;
+
   const childComp = useOutlet();
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { state, dispatch } = useContext(AppContext);
+
   const { toaster } = state;
   const { isOpen, severity, toasterStyle, autoHideDuration, message } = toaster;
+
+  const isLoggedIn = _.get(state, "userInfo.isLoggedIn", false);
+  const userFirstName = _.get(state, "userInfo.firstName", "User");
 
   useEffect(() => {
     const userInfo = getUserInfo();
@@ -24,6 +38,10 @@ const RootPage = (props) => {
     );
 
     if (userInfo && userInfo.token && !isJWTExpired(userInfo.token)) {
+      dispatch({
+        type: UPDATE_USER_INFO,
+        value: { ...userInfo, isLoggedIn: true },
+      });
       const routeBeforeLogin = _.get(state, "routeInfo.routeBeforeLogin", "");
 
       if (!_.isEmpty(routeBeforeLogin)) {
@@ -53,27 +71,53 @@ const RootPage = (props) => {
     dispatch({ type: HIDE_TOASTER });
   };
 
+  const onLogoutUser = async () => {
+    setIsLoading(true);
+    await logoutUser();
+    setIsLoading(false);
+  };
+
   return (
     <>
-      {childComp ? (
-        childComp
-      ) : (
-        <>
-          <AuthButtons />
-          <h1>Homeautomation</h1>
-        </>
-      )}
-      <Snackbar
-        open={isOpen}
-        autoHideDuration={autoHideDuration}
-        onClose={onCloseToaster}
-      >
-        <Alert onClose={onCloseToaster} severity={severity} sx={toasterStyle}>
-          {message}
-        </Alert>
-      </Snackbar>
+      <div className={classes.container}>
+        {isLoggedIn && (
+          <AppBar position="static">
+            <div className={classes.headerContainer}>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                {`Hi, ${userFirstName}`}
+              </Typography>
+              <Button
+                color="inherit"
+                className={classes.logOutButton}
+                onClick={onLogoutUser}
+                style={{ marginLeft: "auto" }}
+              >
+                Logout
+              </Button>
+            </div>
+          </AppBar>
+        )}
+        {childComp ? (
+          childComp
+        ) : (
+          <>
+            <AuthButtons />
+            <h1>Homeautomation</h1>
+          </>
+        )}
+        <Snackbar
+          open={isOpen}
+          autoHideDuration={autoHideDuration}
+          onClose={onCloseToaster}
+        >
+          <Alert onClose={onCloseToaster} severity={severity} sx={toasterStyle}>
+            {message}
+          </Alert>
+        </Snackbar>
+      </div>
+      {isLoading && <Loader />}
     </>
   );
 };
 
-export default RootPage;
+export default LoginHelpersHOC(RootPage);
