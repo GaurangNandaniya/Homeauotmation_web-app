@@ -9,17 +9,18 @@ const useFetchData = (props) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [queryProps, setQueryProps] = useState({});
   const { state } = useContext(AppContext);
   const jwtToken = _.get(state, "userInfo.token", "");
   const dependency = JSON.stringify(props);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async ({ _params = params } = {}) => {
       try {
         setIsLoading(true);
         const response = await fetchDataFromApi({
           path,
-          requestBody: params,
+          requestBody: _params,
           jwtToken,
         });
         setData(response.data);
@@ -31,10 +32,11 @@ const useFetchData = (props) => {
       }
     };
 
-    fetchData();
+    setQueryProps({ refetch: fetchData });
+    fetchData({ _params: params });
   }, [dependency]);
 
-  return { data, isLoading, isError };
+  return { data, isLoading, isError, queryProps };
 };
 
 export default useFetchData;

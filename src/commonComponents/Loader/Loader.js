@@ -1,14 +1,12 @@
 import React from "react";
-import { Backdrop, CircularProgress } from "@mui/material";
+import classes from "./Loader.scss";
+import { CircularProgress } from "@mui/material";
 
 const Loader = () => {
   return (
-    <Backdrop
-      open={true}
-      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-    >
+    <div className={classes.container}>
       <CircularProgress color="inherit" />
-    </Backdrop>
+    </div>
   );
 };
 

@@ -9,7 +9,16 @@ const EmptyState = (props) => {
   return (
     <div className={classes.container}>
       <Typography variant={"h6"}> {title} </Typography>
-      {showButton && <Button onClick={onButtonClick}>{buttonText}</Button>}
+      {showButton && (
+        <Button
+          onClick={onButtonClick}
+          variant="contained"
+          size="small"
+          sx={{ textTransform: "none", fontSize: "1.2rem" }}
+        >
+          {buttonText}
+        </Button>
+      )}
     </div>
   );
 };

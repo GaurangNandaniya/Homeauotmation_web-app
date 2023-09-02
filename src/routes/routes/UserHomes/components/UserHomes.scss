@@ -10,8 +10,45 @@
     display: grid;
 //https://css-tricks.com/auto-sizing-columns-css-grid-auto-fill-vs-auto-fit/
     grid-template-columns: repeat( auto-fill, minmax(172px, 1fr) );
+    grid-gap: 8px;
 }
 
 .cardContainer{
+    margin-top: 8px;
     background-color: aquamarine;
+}
+
+.labelContainer{
+    display: flex;
+    justify-content: space-between;
+    column-gap: 8px;
+    align-items: center;
+}
+
+.modalContainer{
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+}
+
+.modalHeader{
+    display: flex;
+    padding: 16px;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ebebeb;
+}
+
+.inputContainer{
+    margin-bottom: 12px;
+    padding: 16px;
+}
+
+.footer{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    border-top: 1px solid #ebebeb;
+    column-gap: 8px;
+    padding: 16px;
 }

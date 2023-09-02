@@ -13,7 +13,7 @@ import {
 } from "contextAPI/reducerActions";
 import { Alert, AppBar, Button, Snackbar, Typography } from "@mui/material";
 import { LoginHelpersHOC } from "HOCs";
-import { Loader } from "commonComponents";
+import { FullScreenLoader } from "commonComponents";
 
 const RootPage = (props) => {
   const { logoutUser } = props;
@@ -119,7 +119,7 @@ const RootPage = (props) => {
           </Alert>
         </Snackbar>
       </div>
-      {isLoading && <Loader />}
+      {isLoading && <FullScreenLoader />}
     </>
   );
 };

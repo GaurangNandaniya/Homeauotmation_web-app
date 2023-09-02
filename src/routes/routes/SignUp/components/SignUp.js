@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { GoogleLoginWrapper, Loader } from "commonComponents";
+import { GoogleLoginWrapper, FullScreenLoader } from "commonComponents";
 import { signUpUser } from "RootPage/modules/Module";
 import { LoginHelpersHOC } from "HOCs";
 import { SHOW_TOASTER } from "contextAPI/reducerActions";
@@ -59,7 +59,7 @@ const SignUp = (props) => {
 
   return (
     <>
-      {isLoading && <Loader />}
+      {isLoading && <FullScreenLoader />}
       <GoogleLoginWrapper onSuccess={onSuccess} onError={onError} />;
     </>
   );

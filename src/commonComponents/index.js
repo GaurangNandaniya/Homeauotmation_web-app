@@ -1,4 +1,6 @@
 import GoogleLoginWrapper from "./GoogleLoginWrapper";
-import Loader from "./Loader";
+import FullScreenLoader from "./FullScreenLoader";
 import EmptyState from "./EmptyState";
-export { GoogleLoginWrapper, Loader, EmptyState };
+import Loader from "./Loader";
+import Modal from "./Modal";
+export { GoogleLoginWrapper, FullScreenLoader, EmptyState, Loader, Modal };

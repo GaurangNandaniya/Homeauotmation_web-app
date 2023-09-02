@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { GoogleLoginWrapper, Loader } from "commonComponents";
+import { GoogleLoginWrapper, FullScreenLoader } from "commonComponents";
 import { LoginHelpersHOC } from "HOCs";
 
 const Login = (props) => {
@@ -30,7 +30,7 @@ const Login = (props) => {
 
   return (
     <>
-      {isLoading && <Loader />}
+      {isLoading && <FullScreenLoader />}
       <GoogleLoginWrapper onSuccess={onSuccess} onError={onError} />
     </>
   );
