@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import classes from "./CreateEditModal.scss";
-import { Modal } from "commonComponents";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, Modal } from "commonComponents";
+import { TextField, Typography } from "@mui/material";
 
 const CreateEditModal = (props) => {
   const { onClose, onCreate, mode, homeDetails } = props;
@@ -31,12 +31,7 @@ const CreateEditModal = (props) => {
           />
         </div>
         <footer className={classes.footer}>
-          <Button
-            onClick={onClose}
-            variant="outlined"
-            size="small"
-            sx={{ textTransform: "none", fontSize: "1.2rem" }}
-          >
+          <Button onClick={onClose} variant="outlined" size="small">
             Cancel
           </Button>
           <Button
@@ -44,7 +39,6 @@ const CreateEditModal = (props) => {
             variant="contained"
             color="success"
             size="small"
-            sx={{ textTransform: "none", fontSize: "1.2rem" }}
           >
             {mode == "CREATE" ? "Create" : "Update"}
           </Button>

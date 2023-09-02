@@ -3,10 +3,11 @@
     flex-direction: column;
     max-width: 600px;
     height: 90%;
+    width: 100%;
     border-radius: 8px;
     margin: 0 auto;
-    background-color: cadetblue;    
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    // border: 1px solid black;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
 }
 
 .logOutButton{
@@ -22,4 +23,29 @@
     display: flex;
     flex: 1;
     min-height: 0;
+}
+
+.loginSignupcontainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.headingLabelContainer{
+    display: flex;
+    justify-content: center;
+}
+
+.signupContainer{
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+}
+
+.separator{
+    width: 50%;
+    background-color: grey;
+    height: 1px;
+    margin: 8px 0;
 }

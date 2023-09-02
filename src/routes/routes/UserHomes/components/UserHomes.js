@@ -7,11 +7,11 @@ import {
   EmptyState,
   FullScreenLoader,
   Loader,
+  Button,
 } from "commonComponents";
 import { AppContext } from "contextAPI/contextAPI";
 import _ from "lodash";
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -121,7 +121,6 @@ const UserHomes = () => {
               onClick={onCreateHomeClick}
               variant="contained"
               size="small"
-              sx={{ textTransform: "none", fontSize: "1.2rem" }}
             >
               Create home
             </Button>

@@ -1,6 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
 import classes from "./RootPage.scss";
-import AuthButtons from "./AuthButtons";
 import { useOutlet, useNavigate, useLocation } from "react-router-dom";
 import { getUserInfo, setUserInfo } from "utils/localStorageUtils";
 import { isJWTExpired } from "utils/jwtUtils";
@@ -11,9 +10,9 @@ import {
   UPDATE_ROUTE_INFO,
   UPDATE_USER_INFO,
 } from "contextAPI/reducerActions";
-import { Alert, AppBar, Button, Snackbar, Typography } from "@mui/material";
+import { Alert, AppBar, Snackbar, Typography } from "@mui/material";
 import { LoginHelpersHOC } from "HOCs";
-import { FullScreenLoader } from "commonComponents";
+import { Button, FullScreenLoader } from "commonComponents";
 
 const RootPage = (props) => {
   const { logoutUser } = props;
@@ -77,6 +76,13 @@ const RootPage = (props) => {
     setIsLoading(false);
   };
 
+  const onSignupClick = () => {
+    navigate("/signup");
+  };
+  const onLoginClick = () => {
+    navigate("/login");
+  };
+
   return (
     <>
       <div className={classes.container}>
@@ -104,10 +110,26 @@ const RootPage = (props) => {
         {childComp ? (
           <div className={classes.childComp}>{childComp}</div>
         ) : (
-          <>
-            <AuthButtons />
-            <h1>Homeautomation</h1>
-          </>
+          <div className={classes.loginSignupcontainer}>
+            <div className={classes.headingLabelContainer}>
+              <Typography variant="h3">Home-Automation</Typography>
+            </div>
+            <div className={classes.signupContainer}>
+              <Typography variant="h6">New here! Click on Signup</Typography>
+              <Button onClick={onSignupClick} variant="contained" size="small">
+                Signup
+              </Button>
+            </div>
+            <div className={classes.separator}></div>
+            <div className={classes.signupContainer}>
+              <Typography variant="h6">
+                Already a User! Click on Login
+              </Typography>
+              <Button onClick={onLoginClick} variant="contained" size="small">
+                Login
+              </Button>
+            </div>
+          </div>
         )}
         <Snackbar
           open={isOpen}

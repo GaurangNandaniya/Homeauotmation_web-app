@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -9,6 +8,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import Button from "../Button";
 
 const DialogModal = (props) => {
   const {
@@ -34,12 +34,7 @@ const DialogModal = (props) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={onButton1Click}
-          variant="outlined"
-          size="small"
-          sx={{ textTransform: "none", fontSize: "1.2rem" }}
-        >
+        <Button onClick={onButton1Click} variant="outlined" size="small">
           {button1Text}
         </Button>
         <Button
@@ -47,7 +42,6 @@ const DialogModal = (props) => {
           variant="contained"
           size="small"
           color="error"
-          sx={{ textTransform: "none", fontSize: "1.2rem" }}
           autoFocus
         >
           {button2Text}
