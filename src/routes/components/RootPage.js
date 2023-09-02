@@ -83,7 +83,11 @@ const RootPage = (props) => {
         {isLoggedIn && (
           <AppBar position="static">
             <div className={classes.headerContainer}>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ display: "flex", flexGrow: 1, alignItems: "center" }}
+              >
                 {`Hi, ${userFirstName}`}
               </Typography>
               <Button
@@ -98,7 +102,7 @@ const RootPage = (props) => {
           </AppBar>
         )}
         {childComp ? (
-          childComp
+          <div className={classes.childComp}>{childComp}</div>
         ) : (
           <>
             <AuthButtons />

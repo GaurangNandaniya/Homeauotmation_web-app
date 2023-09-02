@@ -7,7 +7,7 @@
       "paths": {
         "commonComponents": ["./src/commonComponents"],
         "utils/*": ["./src/utils/*"],
-        "hooks/*": ["./src/hooks/*"],
+        "hooks": ["./src/hooks"],
         "RootPage/*":["./src/routes/*"],
         "constants/*":["./src/constants/*"],
         "contextAPI/*":["./src/contextAPI/*"],

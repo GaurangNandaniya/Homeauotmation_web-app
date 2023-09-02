@@ -1,7 +1,17 @@
 .container {
     display: flex;
-    height: 100px;
-    width: 150px;
-    border-radius: 8px;
-    border: 1px solid paleturquoise;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    padding: 24px 16px;
+}
+
+.homeListContainer{
+    display: grid;
+//https://css-tricks.com/auto-sizing-columns-css-grid-auto-fill-vs-auto-fit/
+    grid-template-columns: repeat( auto-fill, minmax(172px, 1fr) );
+}
+
+.cardContainer{
+    background-color: aquamarine;
 }

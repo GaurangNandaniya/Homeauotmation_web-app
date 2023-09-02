@@ -14,7 +14,7 @@ export const initialValue = {
     isOpen: false,
     severity: "info",
     toasterStyle: { width: "100%" },
-    autoHideDuration: 5000,
+    autoHideDuration: 3000,
     message: "",
   },
 };
