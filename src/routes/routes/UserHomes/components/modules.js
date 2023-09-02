@@ -39,3 +39,22 @@ export const editUserHome = async ({ name, id }) => {
     return false;
   }
 };
+
+export const deleteUserHome = async ({ id }) => {
+  const { token } = getUserInfo();
+  try {
+    await fetchDataFromApi({
+      jwtToken: token,
+      path: "home/remove",
+      requestBody: {
+        homeDetails: {
+          id,
+        },
+      },
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};

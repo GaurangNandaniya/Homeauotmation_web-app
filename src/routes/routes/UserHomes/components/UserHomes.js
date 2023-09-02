@@ -15,11 +15,16 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   IconButton,
   TextField,
   Typography,
 } from "@mui/material";
-import { creatUserHome, editUserHome } from "./modules";
+import { creatUserHome, deleteUserHome, editUserHome } from "./modules";
 import { MoreVert } from "@mui/icons-material";
 
 const CARD_OPTIONS = [
@@ -40,6 +45,7 @@ const UserHomes = () => {
   const [homeModalMode, setHomeModalMode] = useState("");
   const [selectedHome, setSelectedHome] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
+  const [showDeleteDialogue, setShowDeleteDialogue] = useState(false);
   const {
     data: userHomes,
     isLoading,
@@ -54,6 +60,7 @@ const UserHomes = () => {
   };
   const onHomeClose = () => {
     setHomeModalMode("");
+    setSelectedHome(null);
   };
 
   const onCreateHome = async ({ name, mode, id }) => {
@@ -79,8 +86,23 @@ const UserHomes = () => {
         setSelectedHome(home);
         break;
       case "delete":
+        setShowDeleteDialogue(true);
+        setSelectedHome(home);
         break;
     }
+  };
+  const handleDialogClose = () => {
+    setShowDeleteDialogue(false);
+    setSelectedHome(null);
+  };
+
+  const onDeleteHome = async () => {
+    const { id } = selectedHome;
+    handleDialogClose();
+    setShowLoader(true);
+    await deleteUserHome({ id });
+    await queryProps.refetch();
+    setShowLoader(false);
   };
 
   return (
@@ -150,6 +172,43 @@ const UserHomes = () => {
         />
       )}
       {showLoader && <FullScreenLoader />}
+      {showDeleteDialogue && (
+        <Dialog
+          open={true}
+          onClose={handleDialogClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {`Delete ${selectedHome?.name} `}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              This action can not be undone.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={handleDialogClose}
+              variant="outlined"
+              size="small"
+              sx={{ textTransform: "none", fontSize: "1.2rem" }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={onDeleteHome}
+              variant="contained"
+              size="small"
+              color="error"
+              sx={{ textTransform: "none", fontSize: "1.2rem" }}
+              autoFocus
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 };
@@ -187,7 +246,6 @@ const CreateHomeModal = (props) => {
           <Button
             onClick={onClose}
             variant="outlined"
-            color="error"
             size="small"
             sx={{ textTransform: "none", fontSize: "1.2rem" }}
           >
