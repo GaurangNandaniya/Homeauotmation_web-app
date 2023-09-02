@@ -2,11 +2,11 @@ import React, { useContext, useState } from "react";
 import classes from "./UserHomes.scss";
 import { useFetchData } from "hooks";
 import {
+  DialogModal,
   DropDownMenu,
   EmptyState,
   FullScreenLoader,
   Loader,
-  Modal,
 } from "commonComponents";
 import { AppContext } from "contextAPI/contextAPI";
 import _ from "lodash";
@@ -15,17 +15,12 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   IconButton,
-  TextField,
   Typography,
 } from "@mui/material";
 import { creatUserHome, deleteUserHome, editUserHome } from "./modules";
 import { MoreVert } from "@mui/icons-material";
+import CreateEditModal from "./CreateEditModal";
 
 const CARD_OPTIONS = [
   {
@@ -164,7 +159,7 @@ const UserHomes = () => {
         </>
       )}
       {homeModalMode && (
-        <CreateHomeModal
+        <CreateEditModal
           mode={homeModalMode}
           onClose={onHomeClose}
           onCreate={onCreateHome}
@@ -173,95 +168,18 @@ const UserHomes = () => {
       )}
       {showLoader && <FullScreenLoader />}
       {showDeleteDialogue && (
-        <Dialog
-          open={true}
+        <DialogModal
+          bodytext="This action can not be undone."
+          title={`Delete "${selectedHome?.name}"`}
+          onButton1Click={handleDialogClose}
           onClose={handleDialogClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {`Delete ${selectedHome?.name} `}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              This action can not be undone.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={handleDialogClose}
-              variant="outlined"
-              size="small"
-              sx={{ textTransform: "none", fontSize: "1.2rem" }}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={onDeleteHome}
-              variant="contained"
-              size="small"
-              color="error"
-              sx={{ textTransform: "none", fontSize: "1.2rem" }}
-              autoFocus
-            >
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
+          button1Text="Cancel"
+          button2Text="Delete"
+          onButton2Click={onDeleteHome}
+        />
       )}
     </div>
   );
 };
 
 export default UserHomes;
-
-const CreateHomeModal = (props) => {
-  const { onClose, onCreate, mode, homeDetails } = props;
-  const [name, setName] = useState(() => {
-    if (mode == "CREATE") return "";
-    else return homeDetails?.name || "";
-  });
-
-  const onNameChange = (e) => {
-    setName(e.target.value);
-  };
-  return (
-    <Modal onClose={onClose}>
-      <div className={classes.modalContainer}>
-        <div className={classes.modalHeader}>
-          <Typography variant="h5" sx={{ fontWeight: 500 }}>
-            {mode == "CREATE" ? "Create new home" : "Edit home name"}
-          </Typography>
-        </div>
-        <div className={classes.inputContainer}>
-          <TextField
-            required
-            size="small"
-            label="Enter home name"
-            value={name}
-            onChange={onNameChange}
-          />
-        </div>
-        <footer className={classes.footer}>
-          <Button
-            onClick={onClose}
-            variant="outlined"
-            size="small"
-            sx={{ textTransform: "none", fontSize: "1.2rem" }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => onCreate({ name, mode, id: homeDetails?.id })}
-            variant="contained"
-            color="success"
-            size="small"
-            sx={{ textTransform: "none", fontSize: "1.2rem" }}
-          >
-            {mode == "CREATE" ? "Create" : "Update"}
-          </Button>
-        </footer>
-      </div>
-    </Modal>
-  );
-};
