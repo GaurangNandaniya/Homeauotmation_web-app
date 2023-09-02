@@ -19,3 +19,23 @@ export const creatUserHome = async ({ name }) => {
     return false;
   }
 };
+
+export const editUserHome = async ({ name, id }) => {
+  const { token } = getUserInfo();
+  try {
+    await fetchDataFromApi({
+      jwtToken: token,
+      path: "home/update",
+      requestBody: {
+        homeDetails: {
+          name,
+          id,
+        },
+      },
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};

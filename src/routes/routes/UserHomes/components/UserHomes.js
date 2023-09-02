@@ -1,21 +1,44 @@
 import React, { useContext, useState } from "react";
 import classes from "./UserHomes.scss";
 import { useFetchData } from "hooks";
-import { EmptyState, FullScreenLoader, Loader, Modal } from "commonComponents";
+import {
+  DropDownMenu,
+  EmptyState,
+  FullScreenLoader,
+  Loader,
+  Modal,
+} from "commonComponents";
 import { AppContext } from "contextAPI/contextAPI";
 import _ from "lodash";
 import {
   Button,
   Card,
   CardContent,
+  CardHeader,
+  IconButton,
   TextField,
   Typography,
 } from "@mui/material";
-import { creatUserHome } from "./modules";
+import { creatUserHome, editUserHome } from "./modules";
+import { MoreVert } from "@mui/icons-material";
+
+const CARD_OPTIONS = [
+  {
+    id: "rename",
+    label: "Rename",
+    value: "rename",
+  },
+  {
+    id: "delete",
+    label: "Delete",
+    value: "delete",
+  },
+];
 
 const UserHomes = () => {
   const { state } = useContext(AppContext);
-  const [showCreatHomeModal, setShowCreatHomeModal] = useState(false);
+  const [homeModalMode, setHomeModalMode] = useState("");
+  const [selectedHome, setSelectedHome] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const {
     data: userHomes,
@@ -27,18 +50,37 @@ const UserHomes = () => {
   });
 
   const onCreateHomeClick = () => {
-    setShowCreatHomeModal(true);
+    setHomeModalMode("CREATE");
   };
-  const onCreateHomeClose = () => {
-    setShowCreatHomeModal(false);
+  const onHomeClose = () => {
+    setHomeModalMode("");
   };
 
-  const onCreateHome = async ({ name }) => {
-    onCreateHomeClose();
+  const onCreateHome = async ({ name, mode, id }) => {
+    onHomeClose();
     setShowLoader(true);
-    await creatUserHome({ name });
+    switch (mode) {
+      case "CREATE":
+        await creatUserHome({ name });
+        break;
+      case "EDIT":
+        await editUserHome({ name, id });
+        break;
+    }
     await queryProps.refetch();
     setShowLoader(false);
+  };
+
+  const onOptionClick = (option) => {
+    const { id, home } = option;
+    switch (id) {
+      case "rename":
+        setHomeModalMode("EDIT");
+        setSelectedHome(home);
+        break;
+      case "delete":
+        break;
+    }
   };
 
   return (
@@ -70,12 +112,25 @@ const UserHomes = () => {
           <div className={classes.homeListContainer}>
             {_.map(userHomes, (home) => {
               const { id, name, room_count } = home;
+              const onCardOptionClick = (params) => {
+                onOptionClick({ ...params, home });
+              };
               return (
                 <Card className={classes.cardContainer} key={id}>
+                  <CardHeader
+                    action={
+                      <DropDownMenu
+                        options={CARD_OPTIONS}
+                        onOptionClick={onCardOptionClick}
+                      >
+                        <IconButton>
+                          <MoreVert />
+                        </IconButton>
+                      </DropDownMenu>
+                    }
+                    title={name}
+                  />
                   <CardContent>
-                    <Typography variant="h5" component="div">
-                      {name}
-                    </Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
                       Room count: {room_count}
                     </Typography>
@@ -86,8 +141,13 @@ const UserHomes = () => {
           </div>
         </>
       )}
-      {showCreatHomeModal && (
-        <CreateHomeModal onClose={onCreateHomeClose} onCreate={onCreateHome} />
+      {homeModalMode && (
+        <CreateHomeModal
+          mode={homeModalMode}
+          onClose={onHomeClose}
+          onCreate={onCreateHome}
+          homeDetails={selectedHome}
+        />
       )}
       {showLoader && <FullScreenLoader />}
     </div>
@@ -97,8 +157,11 @@ const UserHomes = () => {
 export default UserHomes;
 
 const CreateHomeModal = (props) => {
-  const { onClose, onCreate } = props;
-  const [name, setName] = useState("");
+  const { onClose, onCreate, mode, homeDetails } = props;
+  const [name, setName] = useState(() => {
+    if (mode == "CREATE") return "";
+    else return homeDetails?.name || "";
+  });
 
   const onNameChange = (e) => {
     setName(e.target.value);
@@ -108,7 +171,7 @@ const CreateHomeModal = (props) => {
       <div className={classes.modalContainer}>
         <div className={classes.modalHeader}>
           <Typography variant="h5" sx={{ fontWeight: 500 }}>
-            Create new home
+            {mode == "CREATE" ? "Create new home" : "Edit home name"}
           </Typography>
         </div>
         <div className={classes.inputContainer}>
@@ -131,13 +194,13 @@ const CreateHomeModal = (props) => {
             Cancel
           </Button>
           <Button
-            onClick={() => onCreate({ name })}
+            onClick={() => onCreate({ name, mode, id: homeDetails?.id })}
             variant="contained"
             color="success"
             size="small"
             sx={{ textTransform: "none", fontSize: "1.2rem" }}
           >
-            Create
+            {mode == "CREATE" ? "Create" : "Update"}
           </Button>
         </footer>
       </div>
