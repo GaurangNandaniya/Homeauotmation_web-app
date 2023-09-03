@@ -37,8 +37,6 @@ export const signUpUser = async ({
 
 export const loginUser = async ({
   email,
-  firstName,
-  lastName,
   password = "",
   isGoogleAuth,
 }) => {
@@ -49,8 +47,6 @@ export const loginUser = async ({
         userDetails: {
           email,
           password,
-          firstName,
-          lastName,
           isGoogleAuth,
         },
       },

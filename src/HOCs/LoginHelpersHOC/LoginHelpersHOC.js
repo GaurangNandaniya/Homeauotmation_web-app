@@ -5,6 +5,7 @@ import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "contextAPI/contextAPI";
 import { SHOW_TOASTER, UPDATE_USER_INFO } from "contextAPI/reducerActions";
+import { fetchDataFromApi } from "utils/api";
 
 const LoginHelpersHOC = (WrapperComp) => {
   const LoginHelpers = (props) => {
@@ -13,29 +14,37 @@ const LoginHelpersHOC = (WrapperComp) => {
 
     const loginUserCall = async ({
       email,
-      firstName,
-      lastName,
       password = "",
       isGoogleAuth = false,
     }) => {
       const response = await loginUser({
         email,
-        firstName,
         isGoogleAuth,
-        lastName,
         password,
       });
 
       const { userId } = jwtDecode(response.token);
+      const { data: userDetails } = await fetchDataFromApi({
+        path: "user/userDetails",
+        jwtToken: response.token,
+        requestBody: {},
+      });
+
       setUserInfo({
-        userInfo: { userId, firstName, lastName, email, token: response.token },
+        userInfo: {
+          userId,
+          firstName: userDetails.first_name,
+          lastName: userDetails.last_name,
+          email,
+          token: response.token,
+        },
       });
       dispatch({
         type: UPDATE_USER_INFO,
         value: {
           userId,
-          firstName,
-          lastName,
+          firstName: userDetails.first_name,
+          lastName: userDetails.last_name,
           email,
           token: response.token,
           isLoggedIn: true,
