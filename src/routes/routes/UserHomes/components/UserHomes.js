@@ -19,7 +19,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { creatUserHome, deleteUserHome, editUserHome } from "./modules";
+import { creatUserHome, deleteUserHome, editUserHome } from "../module/modules";
 import { GridViewRounded, MoreVert } from "@mui/icons-material";
 import CreateEditModal from "./CreateEditModal";
 import { useNavigate, useOutlet } from "react-router-dom";
