@@ -1,10 +1,10 @@
 import React from "react";
-import Login from "./components";
+import Rooms from "./components";
 
 const Comp = () => {
   return {
-    path: "login",
-    element: <Login />,
+    path: "rooms",
+    element: <Rooms />,
   };
 };
 export default Comp;

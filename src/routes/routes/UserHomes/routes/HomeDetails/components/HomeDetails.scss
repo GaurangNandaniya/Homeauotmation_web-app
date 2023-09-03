@@ -1,0 +1,15 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 24px 16px;
+}
+
+.cards{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 8px;
+}
+.card{
+    cursor: pointer;
+}

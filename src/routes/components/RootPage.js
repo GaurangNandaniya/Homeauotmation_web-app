@@ -21,6 +21,7 @@ const RootPage = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
   const { state, dispatch } = useContext(AppContext);
 
   const { toaster } = state;
@@ -47,6 +48,8 @@ const RootPage = (props) => {
         navigate(routeBeforeLogin);
       } else if (_.size(routes) == 0) {
         navigate("/userHomes");
+      } else {
+        // navigate(pathname);
       }
     } else {
       setUserInfo({ userInfo: {} });

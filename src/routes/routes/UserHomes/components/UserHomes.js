@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import classes from "./UserHomes.scss";
 import { useFetchData } from "hooks";
 import {
@@ -8,6 +8,7 @@ import {
   FullScreenLoader,
   Loader,
   Button,
+  BreadCrumbs,
 } from "commonComponents";
 import { AppContext } from "contextAPI/contextAPI";
 import _ from "lodash";
@@ -19,8 +20,15 @@ import {
   Typography,
 } from "@mui/material";
 import { creatUserHome, deleteUserHome, editUserHome } from "./modules";
-import { MoreVert } from "@mui/icons-material";
+import { GridViewRounded, MoreVert } from "@mui/icons-material";
 import CreateEditModal from "./CreateEditModal";
+import { useNavigate, useOutlet } from "react-router-dom";
+import {
+  ADD_BREADCRUMS_ITEM,
+  REMOVE_BREADCRUMS_ITEM,
+} from "contextAPI/reducerActions";
+
+const BREADCRUMB_ID = "USER_HOMES";
 
 const CARD_OPTIONS = [
   {
@@ -35,12 +43,13 @@ const CARD_OPTIONS = [
   },
 ];
 
-const UserHomes = () => {
-  const { state } = useContext(AppContext);
+const UserHomes = (props) => {
+  const { state, dispatch } = useContext(AppContext);
   const [homeModalMode, setHomeModalMode] = useState("");
   const [selectedHome, setSelectedHome] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [showDeleteDialogue, setShowDeleteDialogue] = useState(false);
+  const navigate = useNavigate();
   const {
     data: userHomes,
     isLoading,
@@ -49,6 +58,26 @@ const UserHomes = () => {
     params: { userDetails: { userId: _.get(state, "userInfo.userId", "") } },
     path: "home/userHomes",
   });
+  const childcomp = useOutlet({ userHomes });
+  useEffect(() => {
+    dispatch({
+      type: ADD_BREADCRUMS_ITEM,
+      value: {
+        id: BREADCRUMB_ID,
+        icon: <GridViewRounded />,
+        label: "Homes",
+        route: `/userHomes`,
+      },
+    });
+    return () => {
+      dispatch({
+        type: REMOVE_BREADCRUMS_ITEM,
+        value: {
+          id: BREADCRUMB_ID,
+        },
+      });
+    };
+  }, []);
 
   const onCreateHomeClick = () => {
     setHomeModalMode("CREATE");
@@ -100,8 +129,17 @@ const UserHomes = () => {
     setShowLoader(false);
   };
 
+  const onCardClick = ({ id }) => {
+    navigate(`./${id}`);
+  };
+
+  if (childcomp) {
+    return childcomp;
+  }
+
   return (
     <div className={classes.container}>
+      <BreadCrumbs options={state.breadCrumbs?.items} />
       {isLoading ? (
         <Loader />
       ) : _.isEmpty(userHomes) ? (
@@ -132,7 +170,11 @@ const UserHomes = () => {
                 onOptionClick({ ...params, home });
               };
               return (
-                <Card className={classes.cardContainer} key={id}>
+                <Card
+                  className={classes.cardContainer}
+                  key={id}
+                  onClick={() => onCardClick({ id })}
+                >
                   <CardHeader
                     action={
                       <DropDownMenu

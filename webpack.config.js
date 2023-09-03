@@ -11,6 +11,9 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
+    //https://ui.dev/react-router-cannot-get-url-refresh
+    //https://webpack.js.org/guides/public-path/
+    publicPath: "/",
   },
   module: {
     rules: [

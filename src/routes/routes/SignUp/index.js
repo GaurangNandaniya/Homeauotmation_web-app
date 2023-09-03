@@ -3,7 +3,7 @@ import SignUp from "./components";
 
 const Comp = () => {
   return {
-    path: "/signup",
+    path: "signup",
     element: <SignUp />,
   };
 };

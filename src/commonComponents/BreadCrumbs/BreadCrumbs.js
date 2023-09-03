@@ -5,10 +5,14 @@ import { Breadcrumbs as BreadcrumbsComp, Link } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import _ from "lodash";
 
+const style = {
+  marginBottom: "8px",
+};
+
 const BreadCrumbs = (props) => {
   const { options } = props;
   return (
-    <BreadcrumbsComp color={grey[700]}>
+    <BreadcrumbsComp color={grey[700]} sx={style}>
       {_.map(options, (option) => {
         const { id, route, icon, label } = option;
         return (
@@ -34,7 +38,7 @@ BreadCrumbs.propTypes = {
       id: PropTypes.string.isRequired,
       route: PropTypes.string.isRequired,
       icon: PropTypes.element,
-      labe: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
     })
   ).isRequired,
 };
