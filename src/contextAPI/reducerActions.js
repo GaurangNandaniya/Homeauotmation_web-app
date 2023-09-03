@@ -5,3 +5,7 @@ export const UPDATE_ROUTE_INFO = "UPDATE_ROUTE_INFO";
 //Toaster
 export const SHOW_TOASTER = "SHOW_TOASTER";
 export const HIDE_TOASTER = "HIDE_TOASTER";
+
+//Breafcrums
+export const ADD_BREADCRUMS_ITEM = "ADD_BREADCRUMS_ITEM";
+export const REMOVE_BREADCRUMS_ITEM = "REMOVE_BREADCRUMS_ITEM";

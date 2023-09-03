@@ -4,6 +4,8 @@ import {
   UPDATE_USER_INFO,
   SHOW_TOASTER,
   HIDE_TOASTER,
+  ADD_BREADCRUMS_ITEM,
+  REMOVE_BREADCRUMS_ITEM,
 } from "./reducerActions";
 import update from "immutability-helper";
 
@@ -16,6 +18,9 @@ export const initialValue = {
     toasterStyle: { width: "100%" },
     autoHideDuration: 3000,
     message: "",
+  },
+  breadCrumbs: {
+    items: [],
   },
 };
 
@@ -45,6 +50,26 @@ export const reducers = (state, action) => {
         newState = update(newState, { toaster: { [key]: { $set: val } } });
       });
       return newState;
+    }
+    case ADD_BREADCRUMS_ITEM: {
+      const value = action.value;
+      return update(state, {
+        breadCrumbs: { items: (val) => update(val || [], { $push: [value] }) },
+      });
+    }
+    case REMOVE_BREADCRUMS_ITEM: {
+      const { id } = action.value;
+      const index = _.findIndex(
+        state.breadCrumbs.items,
+        (item) => item.id == id
+      );
+      return index != -1
+        ? update(state, {
+            breadCrumbs: {
+              items: (val) => update(val || [], { $splice: [[index, 1]] }),
+            },
+          })
+        : state;
     }
     default:
       return state;

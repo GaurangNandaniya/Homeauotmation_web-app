@@ -6,6 +6,7 @@ import Modal from "./Modal";
 import DropDownMenu from "./DropDownMenu";
 import DialogModal from "./DialogModal";
 import Button from "./Button";
+import BreadCrumbs from "./BreadCrumbs";
 export {
   GoogleLoginWrapper,
   FullScreenLoader,
@@ -15,4 +16,5 @@ export {
   DropDownMenu,
   DialogModal,
   Button,
+  BreadCrumbs,
 };
