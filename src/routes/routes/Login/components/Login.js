@@ -3,10 +3,12 @@ import classes from "./Login.scss";
 import { GoogleLoginWrapper, FullScreenLoader, Button } from "commonComponents";
 import { LoginHelpersHOC } from "HOCs";
 import { TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
   const { loginUser } = props;
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
@@ -29,10 +31,17 @@ const Login = (props) => {
     setUserInfo((prev) => ({ ...prev, ...params }));
   };
 
+  const goBack = () => {
+    navigate(-1);
+  };
+
   return (
     <>
       {isLoading && <FullScreenLoader />}
       <div className={classes.container}>
+        <span onClick={goBack} className={classes.goBack}>
+          &#60; Go back
+        </span>
         <div className={classes.inputContainers}>
           <TextField
             required

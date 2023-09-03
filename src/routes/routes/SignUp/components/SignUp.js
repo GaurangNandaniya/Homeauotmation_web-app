@@ -6,10 +6,12 @@ import { LoginHelpersHOC } from "HOCs";
 import { SHOW_TOASTER } from "contextAPI/reducerActions";
 import { AppContext } from "contextAPI/contextAPI";
 import { TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = (props) => {
   const { loginUser } = props;
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     email: "",
     firstName: "",
@@ -68,10 +70,17 @@ const SignUp = (props) => {
     setUserInfo((prev) => ({ ...prev, ...params }));
   };
 
+  const goBack = () => {
+    navigate(-1);
+  };
+
   return (
     <>
       {isLoading && <FullScreenLoader />}
       <div className={classes.container}>
+        <span onClick={goBack} className={classes.goBack}>
+          &#60; Go back
+        </span>
         <div className={classes.inputContainers}>
           <TextField
             required
