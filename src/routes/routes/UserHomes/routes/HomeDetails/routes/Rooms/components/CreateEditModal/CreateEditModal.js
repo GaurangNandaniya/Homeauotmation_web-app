@@ -5,10 +5,10 @@ import { TextField, Typography } from "@mui/material";
 import _ from "lodash";
 
 const CreateEditModal = (props) => {
-  const { onClose, onCreate, mode, homeDetails } = props;
+  const { onClose, onCreate, mode, roomDetails } = props;
   const [name, setName] = useState(() => {
     if (mode == "CREATE") return "";
-    else return homeDetails?.name || "";
+    else return roomDetails?.name || "";
   });
 
   const onNameChange = (e) => {
@@ -19,14 +19,14 @@ const CreateEditModal = (props) => {
       <div className={classes.modalContainer}>
         <div className={classes.modalHeader}>
           <Typography variant="h5" sx={{ fontWeight: 500 }}>
-            {mode == "CREATE" ? "Create new home" : "Edit home name"}
+            {mode == "CREATE" ? "Create new room" : "Edit room name"}
           </Typography>
         </div>
         <div className={classes.inputContainer}>
           <TextField
             required
             size="small"
-            label="Enter home name"
+            label="Enter room name"
             value={name}
             onChange={onNameChange}
           />
@@ -36,7 +36,7 @@ const CreateEditModal = (props) => {
             Cancel
           </Button>
           <Button
-            onClick={() => onCreate({ name, mode, id: homeDetails?.id })}
+            onClick={() => onCreate({ name, mode, id: roomDetails?.id })}
             variant="contained"
             color="success"
             size="small"
