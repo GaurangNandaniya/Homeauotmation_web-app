@@ -23,7 +23,9 @@ const HomeDetails = () => {
   const { homeId = "" } = useParams();
   const navigate = useNavigate();
   const { state, dispatch } = useContext(AppContext);
-  const childcomp = useOutlet();
+  const childcomp = useOutlet({
+    userHome: _.find(userHomes, (home) => home.id == homeId),
+  });
 
   useEffect(() => {
     if (!_.some(userHomes, (home) => home.id == homeId)) {
