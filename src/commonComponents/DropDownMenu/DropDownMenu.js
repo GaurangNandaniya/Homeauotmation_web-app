@@ -8,9 +8,11 @@ const DropDownMenu = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  const handleClose = (event) => {
+    event?.stopPropagation();
     setAnchorEl(null);
   };
 
@@ -23,7 +25,8 @@ const DropDownMenu = (props) => {
           return (
             <MenuItem
               key={id}
-              onClick={() => {
+              onClick={(event) => {
+                event.stopPropagation();
                 if (onClick) {
                   onClick(option);
                 } else {

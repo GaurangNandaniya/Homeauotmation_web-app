@@ -1,0 +1,24 @@
+.container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    padding: 24px 16px;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.switchListContainer{
+    display: grid;
+//https://css-tricks.com/auto-sizing-columns-css-grid-auto-fill-vs-auto-fit/
+    grid-template-columns: repeat( auto-fill, minmax(172px, 1fr) );
+    grid-gap: 8px;
+}
+
+.labelContainer{
+    display: flex;
+    justify-content: space-between;
+    column-gap: 8px;
+    align-items: center;
+}
+

@@ -140,7 +140,7 @@ const Rooms = () => {
   };
 
   const onCardClick = ({ id }) => {
-    // navigate(`./${id}`);
+    navigate(`./${id}`);
   };
 
   if (childcomp) {
