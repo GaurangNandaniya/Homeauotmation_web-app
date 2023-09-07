@@ -64,18 +64,38 @@ const RoomDetails = () => {
     };
   }, []);
 
+  const { roomSwitches, roomSwitchesIsLoading, roomSwitchesQueryProps } =
+    useFetchData({
+      params: {
+        switchDetails: {
+          roomId,
+        },
+      },
+      path: "switch/roomSwitches",
+      queryName: "roomSwitches",
+    });
+
+  /**
+   *  "id",
+      "switch_name",
+      "state",
+      "room_name",
+      "home_name"
+   */
   const {
-    data: roomSwitches,
-    isLoading,
-    queryProps,
+    userFavoriteSwitches,
+    userFavoriteSwitchesIsLoading,
+    userFavoriteSwitchesQueryProps,
   } = useFetchData({
     params: {
-      switchDetails: {
-        roomId,
+      favoriteEntityDetails: {
+        entityType: "SWITCH",
       },
     },
-    path: "switch/roomSwitches",
+    path: "user/get-favorite-entity",
+    queryName: "userFavoriteSwitches",
   });
+  const isLoading = roomSwitchesIsLoading;
 
   const onAddSwitchClick = () => {
     setSwitchModalMode("CREATE");
@@ -96,7 +116,7 @@ const RoomDetails = () => {
         await editRoomSwitch({ name, id });
         break;
     }
-    await queryProps.refetch();
+    await roomSwitchesQueryProps.refetch();
     setShowLoader(false);
   };
 
@@ -124,7 +144,7 @@ const RoomDetails = () => {
     handleDialogClose();
     setShowLoader(true);
     await deleteRoomSwitch({ id });
-    await queryProps.refetch();
+    await roomSwitchesQueryProps.refetch();
     setShowLoader(false);
   };
 
@@ -144,7 +164,7 @@ const RoomDetails = () => {
         <>
           <div className={classes.labelContainer}>
             <Typography variant="h4" sx={{ marginBottom: "12px" }}>
-              RoomDetails
+              Room details
             </Typography>
             <Button onClick={onAddSwitchClick} variant="contained" size="small">
               Create switch
@@ -157,7 +177,14 @@ const RoomDetails = () => {
                   key={switchData.id}
                   switchData={switchData}
                   onOptionClick={onOptionClick}
-                  queryProps={queryProps}
+                  roomSwitchesQueryProps={roomSwitchesQueryProps}
+                  userFavoriteSwitchesQueryProps={
+                    userFavoriteSwitchesQueryProps
+                  }
+                  isFavorite={_.some(
+                    userFavoriteSwitches,
+                    (item) => item.id == switchData.id
+                  )}
                 />
               );
             })}

@@ -11,7 +11,8 @@
         "RootPage/*":["./src/routes/*"],
         "constants/*":["./src/constants/*"],
         "contextAPI/*":["./src/contextAPI/*"],
-        "HOCs":["./src/HOCs"]
+        "HOCs":["./src/HOCs"],
+        "RoomDetails/*":["./src/routes/routes/UserHomes/routes/HomeDetails/routes/Rooms/routes/RoomDetails/*"]
       }
     },
     "exclude": ["node_modules", "build","dist"],

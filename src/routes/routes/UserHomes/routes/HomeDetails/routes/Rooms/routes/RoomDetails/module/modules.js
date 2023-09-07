@@ -79,6 +79,46 @@ export const updateSwitchState = async ({ id, state }) => {
   }
 };
 
+export const addUserSwitchFavorite = async ({ id }) => {
+  const { token } = getUserInfo();
+  try {
+    await fetchDataFromApi({
+      jwtToken: token,
+      path: "user/add-favorite-entity",
+      requestBody: {
+        favoriteEntityDetails: {
+          entityId: id,
+          entityType: "SWITCH",
+        },
+      },
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
+export const removeUserSwitchFavorite = async ({ id }) => {
+  const { token } = getUserInfo();
+  try {
+    await fetchDataFromApi({
+      jwtToken: token,
+      path: "user/remove-favorite-entity",
+      requestBody: {
+        favoriteEntityDetails: {
+          entityId: id,
+          entityType: "SWITCH",
+        },
+      },
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
 export const getUpdatedState = (state) => {
   return state == "ON" ? "OFF" : "ON";
 };

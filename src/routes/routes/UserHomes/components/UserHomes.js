@@ -27,6 +27,7 @@ import {
   ADD_BREADCRUMS_ITEM,
   REMOVE_BREADCRUMS_ITEM,
 } from "contextAPI/reducerActions";
+import SwitchCard from "../components/SwitchCard";
 
 const BREADCRUMB_ID = "USER_HOMES";
 
@@ -50,14 +51,28 @@ const UserHomes = (props) => {
   const [showLoader, setShowLoader] = useState(false);
   const [showDeleteDialogue, setShowDeleteDialogue] = useState(false);
   const navigate = useNavigate();
-  const {
-    data: userHomes,
-    isLoading,
-    queryProps,
-  } = useFetchData({
+
+  const { userHomes, userHomesIsLoading, userHomesQueryProps } = useFetchData({
     params: { userDetails: { userId: _.get(state, "userInfo.userId", "") } },
     path: "home/userHomes",
+    queryName: "userHomes",
   });
+
+  const {
+    userFavoriteSwitches,
+    userFavoriteSwitchesIsLoading,
+    userFavoriteSwitchesQueryProps,
+  } = useFetchData({
+    params: {
+      favoriteEntityDetails: {
+        entityType: "SWITCH",
+      },
+    },
+    path: "user/get-favorite-entity",
+    queryName: "userFavoriteSwitches",
+  });
+  const isLoading = userHomesIsLoading || userFavoriteSwitchesIsLoading;
+
   const childcomp = useOutlet({ userHomes });
   useEffect(() => {
     dispatch({
@@ -98,7 +113,7 @@ const UserHomes = (props) => {
         await editUserHome({ name, id });
         break;
     }
-    await queryProps.refetch();
+    await userHomesQueryProps.refetch();
     setShowLoader(false);
   };
 
@@ -125,7 +140,7 @@ const UserHomes = (props) => {
     handleDialogClose();
     setShowLoader(true);
     await deleteUserHome({ id });
-    await queryProps.refetch();
+    await userHomesQueryProps.refetch();
     setShowLoader(false);
   };
 
@@ -151,6 +166,30 @@ const UserHomes = (props) => {
         />
       ) : (
         <>
+          {!_.isEmpty(userFavoriteSwitches) && (
+            <>
+              <div className={classes.labelContainer}>
+                <Typography variant="h4" sx={{ marginBottom: "12px" }}>
+                  Favorite switches
+                </Typography>
+              </div>
+              <div className={classes.switchListContainer}>
+                {_.map(userFavoriteSwitches, (switchData) => {
+                  return (
+                    <SwitchCard
+                      key={switchData.id}
+                      switchData={switchData}
+                      userFavoriteSwitchesQueryProps={
+                        userFavoriteSwitchesQueryProps
+                      }
+                      isFavorite={true}
+                      showCardOptions={false}
+                    />
+                  );
+                })}
+              </div>
+            </>
+          )}
           <div className={classes.labelContainer}>
             <Typography variant="h4" sx={{ marginBottom: "12px" }}>
               Homes

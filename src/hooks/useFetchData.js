@@ -4,7 +4,7 @@ import { AppContext } from "contextAPI/contextAPI";
 import _ from "lodash";
 
 const useFetchData = (props) => {
-  const { params, path } = props;
+  const { params, path, queryName } = props;
 
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,9 +34,15 @@ const useFetchData = (props) => {
 
     setQueryProps({ refetch: fetchData });
     fetchData({ _params: params });
-  }, [dependency]);
+  }, [dependency, jwtToken]);
 
-  return { data, isLoading, isError, queryProps };
+  return {
+    [_.isEmpty(queryName) ? "data" : queryName]: data,
+    [_.isEmpty(queryName) ? "isLoading" : `${queryName}IsLoading`]: isLoading,
+    [_.isEmpty(queryName) ? "isError" : `${queryName}IsError`]: isError,
+    [_.isEmpty(queryName) ? "queryProps" : `${queryName}QueryProps`]:
+      queryProps,
+  };
 };
 
 export default useFetchData;

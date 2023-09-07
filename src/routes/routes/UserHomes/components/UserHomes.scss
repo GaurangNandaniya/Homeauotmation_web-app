@@ -15,6 +15,14 @@
     grid-gap: 8px;
 }
 
+.switchListContainer{
+    display: grid;
+//https://css-tricks.com/auto-sizing-columns-css-grid-auto-fill-vs-auto-fit/
+    grid-template-columns: repeat( auto-fill, minmax(172px, 1fr) );
+    grid-gap: 8px;
+    margin-bottom: 16px;
+}
+
 .cardContainer{
     margin-top: 8px;
     background-color: aquamarine;

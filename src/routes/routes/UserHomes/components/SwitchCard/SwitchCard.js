@@ -13,6 +13,7 @@ import {
   CardHeader,
   CircularProgress,
   IconButton,
+  Typography,
 } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import { DropDownMenu } from "commonComponents";
@@ -21,31 +22,11 @@ import {
   getUpdatedState,
   removeUserSwitchFavorite,
   updateSwitchState,
-} from "../../module/modules";
-
-const CARD_OPTIONS = [
-  {
-    id: "rename",
-    label: "Rename",
-    value: "rename",
-  },
-  {
-    id: "delete",
-    label: "Delete",
-    value: "delete",
-  },
-];
+} from "RoomDetails/module/modules";
 
 const SwitchCard = (props) => {
-  const {
-    onOptionClick,
-    switchData,
-    roomSwitchesQueryProps,
-    userFavoriteSwitchesQueryProps,
-    isFavorite,
-    showCardOptions = true,
-  } = props;
-  const { state, name, id } = switchData;
+  const { switchData, userFavoriteSwitchesQueryProps } = props;
+  const { state, switch_name, home_name, room_name, id } = switchData;
   const [showSwitchStateUpdateLoader, setShowSwitchStateUpdateLoader] =
     useState(false);
   const [showSwitchStarLoader, setShowSwitchStarLoader] = useState(false);
@@ -53,44 +34,28 @@ const SwitchCard = (props) => {
   const onCardClick = async () => {
     setShowSwitchStateUpdateLoader(true);
     await updateSwitchState({ id, state: getUpdatedState(state) });
-    await roomSwitchesQueryProps.refetch();
+    await userFavoriteSwitchesQueryProps.refetch();
     setShowSwitchStateUpdateLoader(false);
   };
 
   const onStarClick = async (e) => {
     e.stopPropagation();
     setShowSwitchStarLoader(true);
-    if (isFavorite) {
-      await removeUserSwitchFavorite({ id });
-    } else {
-      await addUserSwitchFavorite({ id });
-    }
+
+    await removeUserSwitchFavorite({ id });
+
     await userFavoriteSwitchesQueryProps.refetch();
     setShowSwitchStarLoader(false);
   };
 
-  const onCardOptionClick = (params) => {
-    onOptionClick({ ...params, switchData });
-  };
-
   return (
     <Card className={classes.cardContainer} onClick={onCardClick}>
-      <CardHeader
-        action={
-          showCardOptions ? (
-            <DropDownMenu
-              options={CARD_OPTIONS}
-              onOptionClick={onCardOptionClick}
-            >
-              <IconButton>
-                <MoreVert />
-              </IconButton>
-            </DropDownMenu>
-          ) : null
-        }
-        title={name}
-      />
       <CardContent>
+        <div className={classes.infoContainer}>
+          <Typography variant="h5">{switch_name}</Typography>
+          <Typography>Room name: {room_name}</Typography>
+          <Typography>Home name: {home_name}</Typography>
+        </div>
         <div className={classes.stateContainer}>
           {showSwitchStateUpdateLoader ? (
             <CircularProgress color="secondary" />
@@ -103,14 +68,7 @@ const SwitchCard = (props) => {
             <CircularProgress color="secondary" />
           ) : (
             <IconButton onClick={onStarClick}>
-              {isFavorite ? (
-                <StarRateRounded fontSize="large" sx={{ color: orange[500] }} />
-              ) : (
-                <StarBorderRounded
-                  fontSize="large"
-                  sx={{ color: orange[500] }}
-                />
-              )}
+              <StarRateRounded fontSize="large" sx={{ color: orange[500] }} />
             </IconButton>
           )}
         </div>
