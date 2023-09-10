@@ -14,7 +14,7 @@ import {
   CircularProgress,
   IconButton,
 } from "@mui/material";
-import { orange } from "@mui/material/colors";
+import { lightBlue, orange } from "@mui/material/colors";
 import { DropDownMenu } from "commonComponents";
 import {
   addUserSwitchFavorite,
@@ -95,9 +95,9 @@ const SwitchCard = (props) => {
           {showSwitchStateUpdateLoader ? (
             <CircularProgress color="secondary" />
           ) : state == "ON" ? (
-            <Lightbulb />
+            <Lightbulb sx={{ color: lightBlue.A400 }} />
           ) : (
-            <LightbulbOutlined />
+            <LightbulbOutlined sx={{ color: lightBlue.A400 }} />
           )}
           {showSwitchStarLoader ? (
             <CircularProgress color="secondary" />
