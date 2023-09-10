@@ -17,13 +17,15 @@ const useFetchData = (props) => {
   useEffect(() => {
     const fetchData = async ({ _params = params } = {}) => {
       try {
-        setIsLoading(true);
-        const response = await fetchDataFromApi({
-          path,
-          requestBody: _params,
-          jwtToken,
-        });
-        setData(response.data);
+        if (jwtToken) {
+          setIsLoading(true);
+          const response = await fetchDataFromApi({
+            path,
+            requestBody: _params,
+            jwtToken,
+          });
+          setData(response.data);
+        }
       } catch (error) {
         setIsError(true);
         console.error("Error fetching data:", error);

@@ -50,7 +50,7 @@ const RoomDetails = () => {
       value: {
         id: BREADCRUMB_ID,
         icon: <TouchAppRounded />,
-        label: "RoomDetails",
+        label: "Room details",
         route: `/userHomes/${homeId}/rooms/${roomId}`,
       },
     });
