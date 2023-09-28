@@ -4,12 +4,12 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const {
   generateWebpackAliasesFromJsConfig,
-} = require("./Scripts/generateWebpackPathResolve");
+} = require("../Scripts/generateWebpackPathResolve");
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: path.resolve(__dirname, "../src/index.js"),
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "../dist"),
     filename: "bundle.js",
     //https://ui.dev/react-router-cannot-get-url-refresh
     //https://webpack.js.org/guides/public-path/
@@ -21,11 +21,11 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         /*
-    https://medium.com/@rajithaeye/what-is-babel-8dcfdf84ea3e
-    Babel is a JavaScript transpiler that converts edge JavaScript(ES6) 
-    into plain old ES5 JavaScript that can run in any browser even in 
-    the old ones.
-*/
+        https://medium.com/@rajithaeye/what-is-babel-8dcfdf84ea3e
+        Babel is a JavaScript transpiler that converts edge JavaScript(ES6) 
+        into plain old ES5 JavaScript that can run in any browser even in 
+        the old ones.
+    */
         use: {
           loader: "babel-loader",
         },
@@ -55,30 +55,9 @@ module.exports = {
       filename: "styles.css",
     }),
   ],
-  devServer: {
-    static: path.resolve(__dirname, "dist"), // Set the directory to serve static assets
-    hot: true, // Enable hot module replacement
-    historyApiFallback: true, // Enable HTML5 routing
-    host: "0.0.0.0",
-    port: 3000,
-    client: {
-      progress: true,
-    },
-  },
-  //it will watch for changes in file and recompile
-  watch: true,
-  watchOptions: {
-    aggregateTimeout: 2000,
-    poll: 5000,
-    ignored: /node_modules/,
-  },
-  stats: {
-    env: true,
-    colors: true,
-    builtAt: true,
-    errorDetails: true,
-  },
   resolve: {
+    modules: ["../src", "node_modules"],
+    extensions: [".js", ".jsx", "..."],
     alias: {
       ...generateWebpackAliasesFromJsConfig(),
     },
