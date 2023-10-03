@@ -12,9 +12,9 @@ const config = {
     historyApiFallback: true, // Enable HTML5 routing
     host: "0.0.0.0",
     port: 3000,
-    client: {
-      progress: true,
-    },
+    // client: {
+    //   progress: true,
+    // },
   },
   //it will watch for changes in file and recompile
   watch: true,

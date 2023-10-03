@@ -6,6 +6,8 @@ import { GOOGLE_CLIENT_ID } from "./constants/googleLogin";
 import { reducers } from "contextAPI/reduces";
 import { AppContext } from "contextAPI/contextAPI";
 import { initialValue } from "contextAPI/reduces";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const router = createBrowserRouter([RootPage()]);
 
@@ -14,7 +16,9 @@ const App = () => {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <AppContext.Provider value={{ state, dispatch }}>
-        <RouterProvider router={router} />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <RouterProvider router={router} />
+        </LocalizationProvider>
       </AppContext.Provider>
     </GoogleOAuthProvider>
   );

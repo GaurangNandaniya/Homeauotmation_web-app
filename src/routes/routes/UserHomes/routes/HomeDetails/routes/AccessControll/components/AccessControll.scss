@@ -2,4 +2,29 @@
     display: flex;
     flex-direction: column;
     padding: 24px 16px;
+    width: 100%;
+    flex: 1;
+}
+
+.userListContainer{
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+    margin-top: 16px;
+}
+
+.userItem{
+    display: grid;
+    grid-template-columns: 3fr 2fr 2fr 1fr;
+    padding: 4px 8px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    border-radius: 8px;
+    align-items: center;
+}
+
+.labelContainer{
+    display: flex;
+    justify-content: space-between;
+    column-gap: 8px;
+    align-items: center;
 }
