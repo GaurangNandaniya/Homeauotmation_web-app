@@ -15,6 +15,7 @@ import {
 } from "contextAPI/reducerActions";
 import { Home } from "@mui/icons-material";
 import { Card, CardContent, CardHeader, Typography } from "@mui/material";
+import { USER_ROLE_GUEST } from "constants/stringConstatnts";
 
 const BREADCRUMB_ID = "HOME_DETAILS";
 
@@ -70,9 +71,15 @@ const HomeDetails = () => {
     <div className={classes.container}>
       <BreadCrumbs options={state.breadCrumbs?.items} />
       <div className={classes.cards}>
-        <Card onClick={onAccesControlClick} className={classes.card}>
-          <CardHeader title={"Home Access control"} />
-        </Card>
+        {_.get(
+          _.find(userHomes, (home) => home.id == homeId),
+          "user_role",
+          ""
+        ) == USER_ROLE_GUEST ? null : (
+          <Card onClick={onAccesControlClick} className={classes.card}>
+            <CardHeader title={"Home Access control"} />
+          </Card>
+        )}
         <Card onClick={onRoomsClick} className={classes.card}>
           <CardHeader title={"Rooms"} />
           <CardContent>

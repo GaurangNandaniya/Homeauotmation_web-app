@@ -18,23 +18,28 @@ import dayjs from "dayjs";
 import AddUserModal from "./AddUserModal";
 import { removeUserHomeAccess, updateUserHomeAccess } from "../module/module";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import {
+  USER_ROLE_OWNER,
+  USER_ROLE_CO_OWNER,
+  USER_ROLE_GUEST,
+} from "constants/stringConstatnts";
 const BREADCRUMB_ID = "ACCESS_CONTROLL";
 
 const ROLE_OPTIONS = [
   {
-    id: "OWNER",
+    id: USER_ROLE_OWNER,
     label: "Owner",
-    value: "OWNER",
+    value: USER_ROLE_OWNER,
   },
   {
-    id: "CO_OWNER",
+    id: USER_ROLE_CO_OWNER,
     label: "Co-Owner",
-    value: "CO_OWNER",
+    value: USER_ROLE_CO_OWNER,
   },
   {
-    id: "GUEST",
+    id: USER_ROLE_GUEST,
     label: "Guest",
-    value: "GUEST",
+    value: USER_ROLE_GUEST,
   },
 ];
 
@@ -84,7 +89,7 @@ const AccessControll = () => {
   const onOptionClick = async ({ userId, option }) => {
     let role = option.value,
       expireAt;
-    if (role == "GUEST") {
+    if (role == USER_ROLE_GUEST) {
       expireAt = dayjs().add(1, "day").valueOf();
     } else {
       expireAt = undefined;
@@ -160,7 +165,8 @@ const AccessControll = () => {
                   <Typography sx={{ fontSize: "1.2rem" }}>{`${
                     index + 1
                   }. ${first_name} ${last_name}`}</Typography>
-                  {user_role_expire_at != "0" && user_role == "GUEST" ? (
+                  {user_role_expire_at != "0" &&
+                  user_role == USER_ROLE_GUEST ? (
                     <DateTimePicker
                       minDate={dayjs()}
                       onChange={(val) =>
@@ -181,7 +187,7 @@ const AccessControll = () => {
                   <DropDownMenu
                     options={_.filter(
                       ROLE_OPTIONS,
-                      (item) => item.value != "OWNER"
+                      (item) => item.value != USER_ROLE_OWNER
                     )}
                     onOptionClick={(val) =>
                       onOptionClick({ userId: user_id, option: val })
@@ -189,14 +195,14 @@ const AccessControll = () => {
                   >
                     <Button
                       endIcon={<KeyboardArrowDown />}
-                      disabled={user_role == "OWNER"}
+                      disabled={user_role == USER_ROLE_OWNER}
                       variant="outlined"
                     >
                       {getOptionLable(user_role)}
                     </Button>
                   </DropDownMenu>
                   <IconButton
-                    disabled={user_role == "OWNER"}
+                    disabled={user_role == USER_ROLE_OWNER}
                     onClick={() => onDeleteClick(user_id)}
                   >
                     <DeleteForeverRounded />

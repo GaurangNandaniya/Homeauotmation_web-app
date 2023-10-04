@@ -15,7 +15,12 @@ import {
   REMOVE_BREADCRUMS_ITEM,
 } from "contextAPI/reducerActions";
 import { DoorFrontRounded, MoreVert } from "@mui/icons-material";
-import { useNavigate, useOutlet, useParams } from "react-router-dom";
+import {
+  useNavigate,
+  useOutlet,
+  useOutletContext,
+  useParams,
+} from "react-router-dom";
 import CreateEditModal from "./CreateEditModal";
 import {
   creatHomeRoom,
@@ -30,6 +35,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
+import { USER_ROLE_GUEST } from "constants/stringConstatnts";
 const BREADCRUMB_ID = "ROOMS";
 
 const CARD_OPTIONS = [
@@ -53,6 +59,7 @@ const Rooms = () => {
   const [showDeleteDialogue, setShowDeleteDialogue] = useState(false);
   const navigate = useNavigate();
   const { homeId = "" } = useParams();
+  const { userHome } = useOutletContext();
 
   useEffect(() => {
     dispatch({
@@ -86,7 +93,7 @@ const Rooms = () => {
     },
     path: "/room/homeRooms",
   });
-  const childcomp = useOutlet({ homeRooms });
+  const childcomp = useOutlet({ homeRooms, userHome });
 
   const onCreateRoomClick = () => {
     setRoomModalMode("CREATE");
@@ -156,7 +163,7 @@ const Rooms = () => {
         <EmptyState
           buttonText="Create room"
           onButtonClick={onCreateRoomClick}
-          showButton={true}
+          showButton={userHome?.user_role != USER_ROLE_GUEST}
           title="You haven't created room yet!!"
         />
       ) : (
@@ -165,13 +172,15 @@ const Rooms = () => {
             <Typography variant="h4" sx={{ marginBottom: "12px" }}>
               Rooms
             </Typography>
-            <Button
-              onClick={onCreateRoomClick}
-              variant="contained"
-              size="small"
-            >
-              Create room
-            </Button>
+            {userHome?.user_role != USER_ROLE_GUEST ? (
+              <Button
+                onClick={onCreateRoomClick}
+                variant="contained"
+                size="small"
+              >
+                Create room
+              </Button>
+            ) : null}
           </div>
           <div className={classes.roomListContainer}>
             {_.map(homeRooms, (room) => {
@@ -187,14 +196,16 @@ const Rooms = () => {
                 >
                   <CardHeader
                     action={
-                      <DropDownMenu
-                        options={CARD_OPTIONS}
-                        onOptionClick={onCardOptionClick}
-                      >
-                        <IconButton>
-                          <MoreVert />
-                        </IconButton>
-                      </DropDownMenu>
+                      userHome?.user_role != USER_ROLE_GUEST ? (
+                        <DropDownMenu
+                          options={CARD_OPTIONS}
+                          onOptionClick={onCardOptionClick}
+                        >
+                          <IconButton>
+                            <MoreVert />
+                          </IconButton>
+                        </DropDownMenu>
+                      ) : null
                     }
                     title={name}
                   />

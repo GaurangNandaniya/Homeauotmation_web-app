@@ -28,6 +28,7 @@ import {
   REMOVE_BREADCRUMS_ITEM,
 } from "contextAPI/reducerActions";
 import SwitchCard from "../components/SwitchCard";
+import { USER_ROLE_GUEST } from "constants/stringConstatnts";
 
 const BREADCRUMB_ID = "USER_HOMES";
 
@@ -204,7 +205,7 @@ const UserHomes = (props) => {
           </div>
           <div className={classes.homeListContainer}>
             {_.map(userHomes, (home) => {
-              const { id, name, room_count } = home;
+              const { id, name, room_count, user_role } = home;
               const onCardOptionClick = (params) => {
                 onOptionClick({ ...params, home });
               };
@@ -216,14 +217,16 @@ const UserHomes = (props) => {
                 >
                   <CardHeader
                     action={
-                      <DropDownMenu
-                        options={CARD_OPTIONS}
-                        onOptionClick={onCardOptionClick}
-                      >
-                        <IconButton>
-                          <MoreVert />
-                        </IconButton>
-                      </DropDownMenu>
+                      user_role == USER_ROLE_GUEST ? null : (
+                        <DropDownMenu
+                          options={CARD_OPTIONS}
+                          onOptionClick={onCardOptionClick}
+                        >
+                          <IconButton>
+                            <MoreVert />
+                          </IconButton>
+                        </DropDownMenu>
+                      )
                     }
                     title={name}
                   />

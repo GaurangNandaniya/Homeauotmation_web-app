@@ -11,17 +11,21 @@ import _ from "lodash";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import dayjs from "dayjs";
+import {
+  USER_ROLE_CO_OWNER,
+  USER_ROLE_GUEST,
+} from "constants/stringConstatnts";
 
 const ROLE_OPTIONS = [
   {
-    id: "CO_OWNER",
+    id: USER_ROLE_CO_OWNER,
     label: "Co-Owner",
-    value: "CO_OWNER",
+    value: USER_ROLE_CO_OWNER,
   },
   {
-    id: "GUEST",
+    id: USER_ROLE_GUEST,
     label: "Guest",
-    value: "GUEST",
+    value: USER_ROLE_GUEST,
   },
 ];
 
@@ -70,7 +74,8 @@ const AddUserModal = (props) => {
       userHomeRoleDetails: {
         id: userInfo.user_id,
         role: userRole,
-        expireAt: userRole == "GUEST" ? userRoleExpireAt.valueOf() : undefined,
+        expireAt:
+          userRole == USER_ROLE_GUEST ? userRoleExpireAt.valueOf() : undefined,
         homeId,
       },
     });
@@ -80,7 +85,7 @@ const AddUserModal = (props) => {
 
   const onOptionClick = ({ value }) => {
     setUserRole(value);
-    if (value == "CO_OWNER") {
+    if (value == USER_ROLE_CO_OWNER) {
       setUserRoleExpireAt(null);
     }
   };
@@ -118,7 +123,7 @@ const AddUserModal = (props) => {
                 {getOptionLable(userRole)}
               </Button>
             </DropDownMenu>
-            {userRole == "GUEST" ? (
+            {userRole == USER_ROLE_GUEST ? (
               <DateTimePicker
                 className={classes.datePicker}
                 minDate={dayjs()}

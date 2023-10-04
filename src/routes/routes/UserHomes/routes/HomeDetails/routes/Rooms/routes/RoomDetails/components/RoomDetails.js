@@ -25,6 +25,7 @@ import {
   editRoomSwitch,
 } from "../module/modules";
 import SwitchCard from "./SwitchCard";
+import { USER_ROLE_GUEST } from "constants/stringConstatnts";
 const BREADCRUMB_ID = "ROOMS_DETAILS";
 
 const RoomDetails = () => {
@@ -36,7 +37,7 @@ const RoomDetails = () => {
   const [showDeleteDialogue, setShowDeleteDialogue] = useState(false);
   const navigate = useNavigate();
   const { roomId = "", homeId } = useParams();
-  const { homeRooms } = useOutletContext();
+  const { homeRooms, userHome } = useOutletContext();
 
   useEffect(() => {
     if (!_.some(homeRooms, (room) => room.id == roomId)) {
@@ -157,7 +158,7 @@ const RoomDetails = () => {
         <EmptyState
           buttonText="Create switch"
           onButtonClick={onAddSwitchClick}
-          showButton={true}
+          showButton={userHome?.user_role != USER_ROLE_GUEST}
           title="You haven't added switch yet!!"
         />
       ) : (
@@ -175,6 +176,7 @@ const RoomDetails = () => {
               return (
                 <SwitchCard
                   key={switchData.id}
+                  showCardOptions={userHome?.user_role != USER_ROLE_GUEST}
                   switchData={switchData}
                   onOptionClick={onOptionClick}
                   roomSwitchesQueryProps={roomSwitchesQueryProps}
