@@ -29,7 +29,10 @@ const HomeDetails = () => {
   });
 
   useEffect(() => {
-    if (!_.some(userHomes, (home) => home.id == homeId)) {
+    if (
+      !_.isNil(userHomes) &&
+      !_.some(userHomes, (home) => home.id == homeId)
+    ) {
       navigate("/");
     }
   }, [userHomes]);

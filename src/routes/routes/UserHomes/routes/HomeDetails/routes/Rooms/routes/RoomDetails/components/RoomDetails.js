@@ -40,7 +40,10 @@ const RoomDetails = () => {
   const { homeRooms, userHome } = useOutletContext();
 
   useEffect(() => {
-    if (!_.some(homeRooms, (room) => room.id == roomId)) {
+    if (
+      !_.isNil(homeRooms) &&
+      !_.some(homeRooms, (room) => room.id == roomId)
+    ) {
       navigate("/");
     }
   }, [homeRooms]);
