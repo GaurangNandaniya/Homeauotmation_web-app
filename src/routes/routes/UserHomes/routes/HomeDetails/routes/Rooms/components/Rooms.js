@@ -27,7 +27,7 @@ import {
   deleteHomeRoom,
   editHomeRoom,
 } from "../modules/modules";
-import { useFetchData } from "hooks";
+import { useFetchData, useComponentWillMount } from "hooks";
 import {
   Card,
   CardContent,
@@ -61,7 +61,7 @@ const Rooms = () => {
   const { homeId = "" } = useParams();
   const { userHome } = useOutletContext();
 
-  useEffect(() => {
+  useComponentWillMount(() => {
     dispatch({
       type: ADD_BREADCRUMS_ITEM,
       value: {
@@ -71,6 +71,9 @@ const Rooms = () => {
         route: `/userHomes/${homeId}/rooms`,
       },
     });
+  });
+
+  useEffect(() => {
     return () => {
       dispatch({
         type: REMOVE_BREADCRUMS_ITEM,

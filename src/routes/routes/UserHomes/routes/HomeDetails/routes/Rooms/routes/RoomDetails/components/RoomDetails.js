@@ -16,7 +16,7 @@ import {
 import { TouchAppRounded } from "@mui/icons-material";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import CreateEditModal from "./CreateEditModal";
-import { useFetchData } from "hooks";
+import { useFetchData, useComponentWillMount } from "hooks";
 import { Typography } from "@mui/material";
 import _ from "lodash";
 import {
@@ -48,7 +48,7 @@ const RoomDetails = () => {
     }
   }, [homeRooms]);
 
-  useEffect(() => {
+  useComponentWillMount(() => {
     dispatch({
       type: ADD_BREADCRUMS_ITEM,
       value: {
@@ -58,6 +58,9 @@ const RoomDetails = () => {
         route: `/userHomes/${homeId}/rooms/${roomId}`,
       },
     });
+  });
+
+  useEffect(() => {
     return () => {
       dispatch({
         type: REMOVE_BREADCRUMS_ITEM,
@@ -151,7 +154,7 @@ const RoomDetails = () => {
     await roomSwitchesQueryProps.refetch();
     setShowLoader(false);
   };
-
+  console.log(state.breadCrumbs?.items);
   return (
     <div className={classes.container}>
       <BreadCrumbs options={state.breadCrumbs?.items} />

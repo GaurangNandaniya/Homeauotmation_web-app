@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import classes from "./UserHomes.scss";
-import { useFetchData } from "hooks";
+import { useFetchData, useComponentWillMount } from "hooks";
 import {
   DialogModal,
   DropDownMenu,
@@ -75,7 +75,7 @@ const UserHomes = (props) => {
   const isLoading = userHomesIsLoading || userFavoriteSwitchesIsLoading;
 
   const childcomp = useOutlet({ userHomes });
-  useEffect(() => {
+  useComponentWillMount(() => {
     dispatch({
       type: ADD_BREADCRUMS_ITEM,
       value: {
@@ -85,6 +85,8 @@ const UserHomes = (props) => {
         route: `/userHomes`,
       },
     });
+  });
+  useEffect(() => {
     return () => {
       dispatch({
         type: REMOVE_BREADCRUMS_ITEM,
@@ -149,13 +151,13 @@ const UserHomes = (props) => {
     navigate(`./${id}`);
   };
 
-  if (childcomp) {
+  if (childcomp && !isLoading) {
     return childcomp;
   }
 
   return (
     <div className={classes.container}>
-      <BreadCrumbs options={state.breadCrumbs?.items} />
+      <BreadCrumbs options={state.breadCrumbs?.items} showBackButton={false} />
       {isLoading ? (
         <Loader />
       ) : _.isEmpty(userHomes) ? (

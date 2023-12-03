@@ -11,7 +11,7 @@ import {
   DeleteForeverRounded,
 } from "@mui/icons-material";
 import { useOutletContext } from "react-router-dom";
-import { useFetchData } from "hooks";
+import { useFetchData, useComponentWillMount } from "hooks";
 import { IconButton, Typography } from "@mui/material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import dayjs from "dayjs";
@@ -56,7 +56,7 @@ const AccessControll = () => {
   const { userHome } = useOutletContext();
   const [showAddUserModal, setShowAddUserModal] = useState(false);
 
-  useEffect(() => {
+  useComponentWillMount(() => {
     dispatch({
       type: ADD_BREADCRUMS_ITEM,
       value: {
@@ -66,6 +66,8 @@ const AccessControll = () => {
         route: `/userHomes/${userHome?.id}/access-controll`,
       },
     });
+  });
+  useEffect(() => {
     return () => {
       dispatch({
         type: REMOVE_BREADCRUMS_ITEM,

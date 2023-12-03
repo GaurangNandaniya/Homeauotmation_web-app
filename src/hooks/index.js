@@ -1,2 +1,3 @@
 import useFetchData from "./useFetchData";
-export { useFetchData };
+import useComponentWillMount from "./useComponentWillMount";
+export { useFetchData, useComponentWillMount };

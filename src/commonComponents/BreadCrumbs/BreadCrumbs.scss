@@ -3,3 +3,16 @@
     align-items: center;
     column-gap: 4px;
 }
+
+.container{
+    display: flex;
+}
+
+.backButton{
+    margin: 0 12px 8px 0;
+    border-radius: 50%;
+}
+
+.backButton:hover{
+    cursor: pointer;
+}

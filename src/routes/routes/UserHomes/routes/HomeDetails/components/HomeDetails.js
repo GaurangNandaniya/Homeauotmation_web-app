@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import _ from "lodash";
 import { BreadCrumbs } from "commonComponents";
+import { useComponentWillMount } from "hooks";
 import { AppContext } from "contextAPI/contextAPI";
 import {
   ADD_BREADCRUMS_ITEM,
@@ -36,7 +37,8 @@ const HomeDetails = () => {
       navigate("/");
     }
   }, [userHomes]);
-  useEffect(() => {
+
+  useComponentWillMount(() => {
     dispatch({
       type: ADD_BREADCRUMS_ITEM,
       value: {
@@ -50,6 +52,8 @@ const HomeDetails = () => {
         route: `/userHomes/${homeId}`,
       },
     });
+  });
+  useEffect(() => {
     return () => {
       dispatch({
         type: REMOVE_BREADCRUMS_ITEM,
