@@ -9,7 +9,8 @@
     "start": "npm run webpack-dev-server -- --env mode=development --progress --config build-config/webpack.config.js",
     "start_windows": "set NODE_ENV=\"development\" && npm run webpack-dev-server -- --env mode=development --progress --config build-config/webpack.config.js",
     "start_mac_or_linux": "NODE_ENV=\"development\" npm run webpack-dev-server -- --env mode=development --progress --config build-config/webpack.config.js",
-    "build": "npm run webpack -- --env mode=production --config build-config/webpack.config.js"
+    "build": "npm run webpack -- --env mode=production --config build-config/webpack.config.js",
+    "deploy": "deployHAWebApp"
   },
   "keywords": [],
   "author": "",
@@ -39,6 +40,7 @@
     "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.3",
     "mini-css-extract-plugin": "^2.7.6",
+    "netlify-cli": "^17.8.1",
     "node-sass": "^9.0.0",
     "sass-loader": "^13.3.2",
     "style-loader": "^3.3.3",
