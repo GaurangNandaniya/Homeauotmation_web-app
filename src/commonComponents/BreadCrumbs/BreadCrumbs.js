@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const style = {
   marginBottom: "8px",
+  fontSize: "1.2rem",
 };
 
 const BreadCrumbs = (props) => {
