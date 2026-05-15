@@ -24,7 +24,9 @@ const SwitchTile = ({
   onOptionClick,
 }) => {
   const theme = useTheme();
-  const { id, name, state: initialState, type } = switchData;
+  const { id, state: initialState, type } = switchData;
+  // Favorites endpoint returns `switch_name`; room endpoint returns `name`.
+  const name = switchData.name || switchData.switch_name;
   const deviceType = getDeviceType(type);
 
   const [localState, setLocalState] = useState(initialState);
