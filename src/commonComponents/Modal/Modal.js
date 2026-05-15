@@ -20,7 +20,7 @@ const Modal = (props) => {
           border: 1,
           borderColor: "divider",
           boxShadow: 24,
-          borderRadius: 3,
+          borderRadius: 4,
           p: 2.5,
           ...sx,
         }}
