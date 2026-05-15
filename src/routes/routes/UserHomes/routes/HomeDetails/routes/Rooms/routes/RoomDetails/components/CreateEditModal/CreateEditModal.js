@@ -1,43 +1,65 @@
 import React, { useState } from "react";
 import classes from "./CreateEditModal.scss";
-import { Button, Modal } from "commonComponents";
-import { TextField, Typography } from "@mui/material";
+import { Button, Modal, DeviceTypePicker } from "commonComponents";
+import { TextField, Typography, Box } from "@mui/material";
 import _ from "lodash";
+import { DEFAULT_DEVICE_TYPE } from "constants/deviceTypes";
 
 const CreateEditModal = (props) => {
   const { onClose, onCreate, mode, switchDetails } = props;
+  const isEdit = mode === "EDIT";
+
   const [switchInfo, setSwitchInfo] = useState(() => {
-    if (mode == "CREATE") return { microcontrollerId: "", name: "" };
-    else return { microcontrollerId: "", name: switchDetails?.name || "" };
+    if (isEdit) {
+      return {
+        microcontrollerId: "",
+        name: switchDetails?.name || "",
+        type: switchDetails?.type || DEFAULT_DEVICE_TYPE,
+      };
+    }
+    return { microcontrollerId: "", name: "", type: DEFAULT_DEVICE_TYPE };
   });
 
-  const onFieldChange = (e, key) => {
-    setSwitchInfo((prev) => ({ ...prev, [key]: e.target.value }));
+  const onFieldChange = (key, value) => {
+    setSwitchInfo((prev) => ({ ...prev, [key]: value }));
   };
+
+  const submitDisabled = isEdit
+    ? _.isEmpty(switchInfo.name)
+    : _.isEmpty(switchInfo.microcontrollerId);
+
   return (
     <Modal onClose={onClose}>
       <div className={classes.modalContainer}>
         <div className={classes.modalHeader}>
-          <Typography variant="h5" sx={{ fontWeight: 500 }}>
-            {mode == "CREATE" ? "Create switches" : "Edit switch name"}
+          <Typography variant="h3">
+            {isEdit ? "Edit switch" : "Create switches"}
           </Typography>
         </div>
         <div className={classes.inputContainer}>
-          {mode == "CREATE" ? (
-            <TextField
-              required
-              size="small"
-              label="Enter microcontroller id"
-              value={switchInfo.microcontrollerId}
-              onChange={(e) => onFieldChange(e, "microcontrollerId")}
-            />
+          {isEdit ? (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <TextField
+                required
+                size="small"
+                label="Switch name"
+                value={switchInfo.name}
+                onChange={(e) => onFieldChange("name", e.target.value)}
+                fullWidth
+              />
+              <DeviceTypePicker
+                value={switchInfo.type}
+                onChange={(val) => onFieldChange("type", val)}
+              />
+            </Box>
           ) : (
             <TextField
               required
               size="small"
-              label="Enter switch name"
-              value={switchInfo.name}
-              onChange={(e) => onFieldChange(e, "name")}
+              label="Microcontroller id"
+              value={switchInfo.microcontrollerId}
+              onChange={(e) => onFieldChange("microcontrollerId", e.target.value)}
+              fullWidth
             />
           )}
         </div>
@@ -52,18 +74,14 @@ const CreateEditModal = (props) => {
                 mode,
                 id: switchDetails?.id,
                 microcontrollerId: switchInfo.microcontrollerId,
+                type: switchInfo.type,
               })
             }
             variant="contained"
-            color="success"
             size="small"
-            disabled={
-              mode == "CREATE"
-                ? _.isEmpty(switchInfo.microcontrollerId)
-                : _.isEmpty(switchInfo.name)
-            }
+            disabled={submitDisabled}
           >
-            {mode == "CREATE" ? "Create" : "Update"}
+            {isEdit ? "Update" : "Create"}
           </Button>
         </footer>
       </div>

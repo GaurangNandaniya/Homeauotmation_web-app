@@ -68,11 +68,11 @@ const RoomDetails = () => {
     setSelectedSwitch(null);
   };
 
-  const onCreateSwitch = async ({ name, mode, microcontrollerId, id }) => {
+  const onCreateSwitch = async ({ name, mode, microcontrollerId, type, id }) => {
     onSwitchModalClose();
     setShowLoader(true);
     if (mode === "CREATE") await creatSwitches({ roomId, microcontrollerId });
-    else if (mode === "EDIT") await editRoomSwitch({ name, id });
+    else if (mode === "EDIT") await editRoomSwitch({ name, type, id });
     await roomSwitchesQueryProps.refetch();
     setShowLoader(false);
   };

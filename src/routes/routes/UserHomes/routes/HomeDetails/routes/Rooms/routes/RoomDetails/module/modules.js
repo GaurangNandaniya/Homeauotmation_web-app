@@ -21,18 +21,15 @@ export const creatSwitches = async ({ roomId, microcontrollerId }) => {
   }
 };
 
-export const editRoomSwitch = async ({ name, id }) => {
+export const editRoomSwitch = async ({ name, type, id }) => {
   const { token } = getUserInfo();
   try {
+    const switchDetails = { name, id };
+    if (type !== undefined) switchDetails.type = type;
     await fetchDataFromApi({
       jwtToken: token,
       path: "switch/update",
-      requestBody: {
-        switchDetails: {
-          name,
-          id,
-        },
-      },
+      requestBody: { switchDetails },
     });
     return true;
   } catch (e) {
