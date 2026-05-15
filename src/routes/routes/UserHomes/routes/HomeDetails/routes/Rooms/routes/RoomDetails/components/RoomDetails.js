@@ -50,7 +50,7 @@ const RoomDetails = () => {
     useFetchData({
       params: { switchDetails: { roomId } },
       path: "switch/roomSwitches",
-      queryName: ["roomSwitches", roomId],
+      queryName: "roomSwitches",
     });
 
   const { userFavoriteSwitches, userFavoriteSwitchesQueryProps } = useFetchData({
