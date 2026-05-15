@@ -65,8 +65,6 @@ const HomeDetails = () => {
         onChange={onTabChange}
         sx={{
           px: 2,
-          borderBottom: 1,
-          borderColor: "divider",
           minHeight: 44,
           "& .MuiTab-root": { textTransform: "none", minHeight: 44 },
         }}

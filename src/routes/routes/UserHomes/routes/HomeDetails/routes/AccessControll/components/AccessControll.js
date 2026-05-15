@@ -4,6 +4,7 @@ import {
   Box,
   Typography,
   IconButton,
+  Skeleton,
   useTheme,
 } from "@mui/material";
 import {
@@ -14,11 +15,7 @@ import {
 import { useOutletContext } from "react-router-dom";
 import dayjs from "dayjs";
 import { useFetchData } from "hooks";
-import {
-  Button,
-  DropDownMenu,
-  SkeletonTileGrid,
-} from "commonComponents";
+import { Button, DropDownMenu } from "commonComponents";
 import AddUserModal from "./AddUserModal";
 import { removeUserHomeAccess, updateUserHomeAccess } from "../module/module";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -105,7 +102,16 @@ const AccessControll = () => {
       </Box>
 
       {homeUsersIsLoading ? (
-        <SkeletonTileGrid count={4} />
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          {[0, 1, 2].map((i) => (
+            <Skeleton
+              key={i}
+              variant="rounded"
+              height={76}
+              sx={{ borderRadius: tokens.card.borderRadius }}
+            />
+          ))}
+        </Box>
       ) : (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
           {_.map(homeUsers, (homeUser) => {
