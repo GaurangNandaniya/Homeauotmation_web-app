@@ -1,54 +1,40 @@
-import React, { useContext, useEffect, useState } from "react";
-import classes from "./UserHomes.scss";
-import { useFetchData, useComponentWillMount } from "hooks";
+import React, { useContext, useState } from "react";
+import { Box, Typography } from "@mui/material";
+import { AddRounded } from "@mui/icons-material";
+import { useFetchData } from "hooks";
 import {
   DialogModal,
-  DropDownMenu,
   EmptyState,
   FullScreenLoader,
-  Loader,
   Button,
-  BreadCrumbs,
+  TopBar,
+  HomeCard,
+  SwitchTile,
+  SkeletonTileGrid,
 } from "commonComponents";
 import { AppContext } from "contextAPI/contextAPI";
 import _ from "lodash";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  IconButton,
-  Typography,
-} from "@mui/material";
-import { creatUserHome, deleteUserHome, editUserHome } from "../module/modules";
-import { GridViewRounded, MoreVert } from "@mui/icons-material";
-import CreateEditModal from "./CreateEditModal";
-import { useNavigate, useOutlet } from "react-router-dom";
+  creatUserHome,
+  deleteUserHome,
+  editUserHome,
+} from "../module/modules";
 import {
-  ADD_BREADCRUMS_ITEM,
-  REMOVE_BREADCRUMS_ITEM,
-} from "contextAPI/reducerActions";
-import SwitchCard from "../components/SwitchCard";
+  updateSwitchState,
+  removeUserSwitchFavorite,
+} from "../routes/HomeDetails/routes/Rooms/routes/RoomDetails/module/modules";
+import CreateEditModal from "./CreateEditModal";
+import { useNavigate, useOutlet, useOutletContext } from "react-router-dom";
+import tokens from "../../../../theme/tokens";
 import { USER_ROLE_GUEST } from "constants/stringConstatnts";
 
-const BREADCRUMB_ID = "USER_HOMES";
+const UserHomes = () => {
+  const rootCtx = useOutletContext() || {};
+  const { openSettings } = rootCtx;
 
-const CARD_OPTIONS = [
-  {
-    id: "rename",
-    label: "Rename",
-    value: "rename",
-  },
-  {
-    id: "delete",
-    label: "Delete",
-    value: "delete",
-  },
-];
-
-const UserHomes = (props) => {
-  const { state, dispatch } = useContext(AppContext);
+  const { state } = useContext(AppContext);
   const [homeModalMode, setHomeModalMode] = useState("");
-  const [selectedHome, setSelectedHome] = useState(false);
+  const [selectedHome, setSelectedHome] = useState(null);
   const [showLoader, setShowLoader] = useState(false);
   const [showDeleteDialogue, setShowDeleteDialogue] = useState(false);
   const navigate = useNavigate();
@@ -64,42 +50,17 @@ const UserHomes = (props) => {
     userFavoriteSwitchesIsLoading,
     userFavoriteSwitchesQueryProps,
   } = useFetchData({
-    params: {
-      favoriteEntityDetails: {
-        entityType: "SWITCH",
-      },
-    },
+    params: { favoriteEntityDetails: { entityType: "SWITCH" } },
     path: "user/get-favorite-entity",
     queryName: "userFavoriteSwitches",
   });
+
   const isLoading = userHomesIsLoading || userFavoriteSwitchesIsLoading;
 
-  const childcomp = useOutlet({ userHomes });
-  useComponentWillMount(() => {
-    dispatch({
-      type: ADD_BREADCRUMS_ITEM,
-      value: {
-        id: BREADCRUMB_ID,
-        icon: <GridViewRounded />,
-        label: "Homes",
-        route: `/userHomes`,
-      },
-    });
-  });
-  useEffect(() => {
-    return () => {
-      dispatch({
-        type: REMOVE_BREADCRUMS_ITEM,
-        value: {
-          id: BREADCRUMB_ID,
-        },
-      });
-    };
-  }, []);
+  const childcomp = useOutlet({ userHomes, openSettings });
+  if (childcomp && !isLoading) return childcomp;
 
-  const onCreateHomeClick = () => {
-    setHomeModalMode("CREATE");
-  };
+  const onCreateHomeClick = () => setHomeModalMode("CREATE");
   const onHomeClose = () => {
     setHomeModalMode("");
     setSelectedHome(null);
@@ -108,141 +69,139 @@ const UserHomes = (props) => {
   const onCreateHome = async ({ name, mode, id }) => {
     onHomeClose();
     setShowLoader(true);
-    switch (mode) {
-      case "CREATE":
-        await creatUserHome({ name });
-        break;
-      case "EDIT":
-        await editUserHome({ name, id });
-        break;
-    }
+    if (mode === "CREATE") await creatUserHome({ name });
+    else if (mode === "EDIT") await editUserHome({ name, id });
     await userHomesQueryProps.refetch();
     setShowLoader(false);
   };
 
   const onOptionClick = (option) => {
     const { id, home } = option;
-    switch (id) {
-      case "rename":
-        setHomeModalMode("EDIT");
-        setSelectedHome(home);
-        break;
-      case "delete":
-        setShowDeleteDialogue(true);
-        setSelectedHome(home);
-        break;
+    if (id === "rename") {
+      setHomeModalMode("EDIT");
+      setSelectedHome(home);
+    } else if (id === "delete") {
+      setShowDeleteDialogue(true);
+      setSelectedHome(home);
     }
-  };
-  const handleDialogClose = () => {
-    setShowDeleteDialogue(false);
-    setSelectedHome(null);
   };
 
   const onDeleteHome = async () => {
     const { id } = selectedHome;
-    handleDialogClose();
+    setShowDeleteDialogue(false);
+    setSelectedHome(null);
     setShowLoader(true);
     await deleteUserHome({ id });
     await userHomesQueryProps.refetch();
     setShowLoader(false);
   };
 
-  const onCardClick = ({ id }) => {
-    navigate(`./${id}`);
-  };
-
-  if (childcomp && !isLoading) {
-    return childcomp;
-  }
+  const onCardClick = ({ id }) => navigate(`./${id}`);
 
   return (
-    <div className={classes.container}>
-      <BreadCrumbs options={state.breadCrumbs?.items} showBackButton={false} />
-      {isLoading ? (
-        <Loader />
-      ) : _.isEmpty(userHomes) ? (
-        <EmptyState
-          buttonText="Create home"
-          onButtonClick={onCreateHomeClick}
-          showButton={true}
-          title="You haven't created home yet!!"
-        />
-      ) : (
-        <>
-          {!_.isEmpty(userFavoriteSwitches) && (
-            <>
-              <div className={classes.labelContainer}>
-                <Typography variant="h4" sx={{ marginBottom: "12px" }}>
-                  Favorite switches
-                </Typography>
-              </div>
-              <div className={classes.switchListContainer}>
-                {_.map(userFavoriteSwitches, (switchData) => {
-                  return (
-                    <SwitchCard
-                      key={switchData.id}
-                      switchData={switchData}
-                      userFavoriteSwitchesQueryProps={
-                        userFavoriteSwitchesQueryProps
-                      }
-                      isFavorite={true}
-                      showCardOptions={false}
-                    />
-                  );
-                })}
-              </div>
-            </>
-          )}
-          <div className={classes.labelContainer}>
-            <Typography variant="h4" sx={{ marginBottom: "12px" }}>
-              Homes
-            </Typography>
-            <Button
-              onClick={onCreateHomeClick}
-              variant="contained"
-              size="small"
-            >
-              Create home
-            </Button>
-          </div>
-          <div className={classes.homeListContainer}>
-            {_.map(userHomes, (home) => {
-              const { id, name, room_count, user_role } = home;
-              const onCardOptionClick = (params) => {
-                onOptionClick({ ...params, home });
-              };
-              return (
-                <Card
-                  className={classes.cardContainer}
-                  key={id}
-                  onClick={() => onCardClick({ id })}
+    <Box sx={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
+      <TopBar
+        title="Homes"
+        showBack={false}
+        onSettingsClick={openSettings}
+      />
+      <Box sx={{ p: 2, overflowY: "auto", flex: 1 }}>
+        {isLoading ? (
+          <SkeletonTileGrid count={6} />
+        ) : _.isEmpty(userHomes) ? (
+          <EmptyState
+            buttonText="Create home"
+            onButtonClick={onCreateHomeClick}
+            showButton
+            title="No homes yet"
+          />
+        ) : (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: tokens.grid.sectionGap }}>
+            {!_.isEmpty(userFavoriteSwitches) && (
+              <Box>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: "text.secondary",
+                    display: "block",
+                    mb: 1,
+                    letterSpacing: "0.05em",
+                  }}
                 >
-                  <CardHeader
-                    action={
-                      user_role == USER_ROLE_GUEST ? null : (
-                        <DropDownMenu
-                          options={CARD_OPTIONS}
-                          onOptionClick={onCardOptionClick}
-                        >
-                          <IconButton>
-                            <MoreVert />
-                          </IconButton>
-                        </DropDownMenu>
-                      )
-                    }
-                    title={name}
+                  FAVORITES
+                </Typography>
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: `repeat(auto-fill, minmax(${tokens.grid.minColWidth}px, 1fr))`,
+                    gap: tokens.grid.gap,
+                  }}
+                >
+                  {_.map(userFavoriteSwitches, (sd) => (
+                    <SwitchTile
+                      key={sd.id}
+                      switchData={sd}
+                      isFavorite
+                      showOptions={false}
+                      onToggle={async ({ id, state }) => {
+                        await updateSwitchState({ id, state });
+                      }}
+                      onFavoriteToggle={async ({ id }) => {
+                        await removeUserSwitchFavorite({ id });
+                        await userFavoriteSwitchesQueryProps.refetch();
+                      }}
+                    />
+                  ))}
+                </Box>
+              </Box>
+            )}
+
+            <Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 1,
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  sx={{ color: "text.secondary", letterSpacing: "0.05em" }}
+                >
+                  MY HOMES
+                </Typography>
+                <Button
+                  onClick={onCreateHomeClick}
+                  variant="contained"
+                  size="small"
+                  startIcon={<AddRounded />}
+                >
+                  Add
+                </Button>
+              </Box>
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: `repeat(auto-fill, minmax(${tokens.grid.homeColWidth}px, 1fr))`,
+                  gap: tokens.grid.gap,
+                }}
+              >
+                {_.map(userHomes, (home) => (
+                  <HomeCard
+                    key={home.id}
+                    home={home}
+                    onClick={onCardClick}
+                    onOptionClick={onOptionClick}
+                    showOptions={home.user_role !== USER_ROLE_GUEST}
                   />
-                  <CardContent>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      Room count: {room_count}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </>
-      )}
+                ))}
+              </Box>
+            </Box>
+          </Box>
+        )}
+      </Box>
+
       {homeModalMode && (
         <CreateEditModal
           mode={homeModalMode}
@@ -256,14 +215,14 @@ const UserHomes = (props) => {
         <DialogModal
           bodytext="This action can not be undone."
           title={`Delete "${selectedHome?.name}"`}
-          onButton1Click={handleDialogClose}
-          onClose={handleDialogClose}
+          onButton1Click={() => setShowDeleteDialogue(false)}
+          onClose={() => setShowDeleteDialogue(false)}
           button1Text="Cancel"
           button2Text="Delete"
           onButton2Click={onDeleteHome}
         />
       )}
-    </div>
+    </Box>
   );
 };
 
