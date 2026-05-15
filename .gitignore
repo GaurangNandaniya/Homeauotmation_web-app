@@ -4,3 +4,5 @@ dist
 .netlify
 # Brainstorming session mockups (visual companion)
 .superpowers/
+
+.DS_Store
