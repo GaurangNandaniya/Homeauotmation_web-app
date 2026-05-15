@@ -1,5 +1,4 @@
 import React, { useEffect, useContext, useState } from "react";
-import classes from "./RootPage.scss";
 import { useOutlet, useNavigate, useLocation } from "react-router-dom";
 import { getUserInfo, setUserInfo } from "utils/localStorageUtils";
 import { isJWTExpired } from "utils/jwtUtils";
@@ -10,25 +9,24 @@ import {
   UPDATE_ROUTE_INFO,
   UPDATE_USER_INFO,
 } from "contextAPI/reducerActions";
-import { Alert, AppBar, Snackbar, Typography } from "@mui/material";
+import { Alert, Box, Snackbar, Typography } from "@mui/material";
 import { LoginHelpersHOC } from "HOCs";
-import { Button, FullScreenLoader } from "commonComponents";
+import { Button, FullScreenLoader, SettingsSheet } from "commonComponents";
 
 const RootPage = (props) => {
   const { logoutUser } = props;
 
-  const childComp = useOutlet();
   const [isLoading, setIsLoading] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const childComp = useOutlet({ openSettings: () => setSettingsOpen(true) });
+
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const { state, dispatch } = useContext(AppContext);
-
   const { toaster } = state;
   const { isOpen, severity, toasterStyle, autoHideDuration, message } = toaster;
-
-  const isLoggedIn = _.get(state, "userInfo.isLoggedIn", false);
-  const userFirstName = _.get(state, "userInfo.firstName", "User");
 
   useEffect(() => {
     const userInfo = getUserInfo();
@@ -43,17 +41,13 @@ const RootPage = (props) => {
         value: { ...userInfo, isLoggedIn: true },
       });
       const routeBeforeLogin = _.get(state, "routeInfo.routeBeforeLogin", "");
-
       if (!_.isEmpty(routeBeforeLogin)) {
         navigate(routeBeforeLogin);
       } else if (_.size(routes) == 0) {
         navigate("/userHomes");
-      } else {
-        // navigate(pathname);
       }
     } else {
       setUserInfo({ userInfo: {} });
-
       if (_.size(routes) > 0) {
         if (!_.get(state, "routeInfo.isRouteBeforeLoginAdded", false)) {
           dispatch({
@@ -69,71 +63,98 @@ const RootPage = (props) => {
     }
   }, [pathname]);
 
-  const onCloseToaster = () => {
-    dispatch({ type: HIDE_TOASTER });
-  };
+  const onCloseToaster = () => dispatch({ type: HIDE_TOASTER });
 
   const onLogoutUser = async () => {
+    setSettingsOpen(false);
     setIsLoading(true);
     await logoutUser();
     setIsLoading(false);
   };
 
-  const onSignupClick = () => {
-    navigate("/signup");
-  };
-  const onLoginClick = () => {
-    navigate("/login");
-  };
+  const onSignupClick = () => navigate("/signup");
+  const onLoginClick = () => navigate("/login");
 
   return (
     <>
-      <div className={classes.container}>
-        {isLoggedIn && (
-          <AppBar position="static">
-            <div className={classes.headerContainer}>
-              <Typography
-                variant="h6"
-                component="div"
-                sx={{ display: "flex", flexGrow: 1, alignItems: "center" }}
-              >
-                {`Hi, ${userFirstName}`}
-              </Typography>
-              <Button
-                color="inherit"
-                className={classes.logOutButton}
-                onClick={onLogoutUser}
-                style={{ marginLeft: "auto" }}
-              >
-                Logout
-              </Button>
-            </div>
-          </AppBar>
-        )}
+      <Box
+        sx={{
+          minHeight: "100vh",
+          bgcolor: "background.default",
+          color: "text.primary",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         {childComp ? (
-          <div className={classes.childComp}>{childComp}</div>
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              minHeight: 0,
+            }}
+          >
+            {childComp}
+          </Box>
         ) : (
-          <div className={classes.loginSignupcontainer}>
-            <div className={classes.headingLabelContainer}>
-              <Typography variant="h3">Home-Automation</Typography>
-            </div>
-            <div className={classes.signupContainer}>
-              <Typography variant="h6">New here! Click on Signup</Typography>
-              <Button onClick={onSignupClick} variant="contained" size="small">
-                Signup
-              </Button>
-            </div>
-            <div className={classes.separator}></div>
-            <div className={classes.signupContainer}>
-              <Typography variant="h6">
-                Already a User! Click on Login
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              px: 3,
+              gap: 4,
+              maxWidth: 480,
+              mx: "auto",
+              width: "100%",
+            }}
+          >
+            <Box sx={{ textAlign: "center" }}>
+              <Typography variant="h1" sx={{ mb: 1 }}>
+                Home-Automation
               </Typography>
-              <Button onClick={onLoginClick} variant="contained" size="small">
+              <Typography variant="body1" color="text.secondary">
+                Control every switch from one place.
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 1.5,
+                width: "100%",
+                maxWidth: 320,
+              }}
+            >
+              <Button
+                onClick={onLoginClick}
+                variant="contained"
+                size="large"
+                fullWidth
+              >
                 Login
               </Button>
-            </div>
-          </div>
+              <Button
+                onClick={onSignupClick}
+                variant="outlined"
+                size="large"
+                fullWidth
+              >
+                Sign up
+              </Button>
+            </Box>
+          </Box>
         )}
+
+        <SettingsSheet
+          open={settingsOpen}
+          onClose={() => setSettingsOpen(false)}
+          onLogout={onLogoutUser}
+        />
+
         <Snackbar
           open={isOpen}
           autoHideDuration={autoHideDuration}
@@ -143,7 +164,7 @@ const RootPage = (props) => {
             {message}
           </Alert>
         </Snackbar>
-      </div>
+      </Box>
       {isLoading && <FullScreenLoader />}
     </>
   );
