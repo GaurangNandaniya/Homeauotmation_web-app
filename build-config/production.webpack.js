@@ -3,7 +3,7 @@ const common = require("./common.config");
 
 const config = {
   mode: "production",
-  devtool: "source-map",
+  devtool: false,
 };
 
 module.exports = merge(common, config);

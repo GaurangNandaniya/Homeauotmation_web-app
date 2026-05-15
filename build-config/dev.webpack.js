@@ -4,9 +4,10 @@ const common = require("./common.config");
 
 const config = {
   mode: "development",
+  //https://webpack.js.org/configuration/devtool/#development
   devtool: "eval-source-map",
   devServer: {
-    open: true,
+    // open: true,
     static: path.resolve(__dirname, "../dist"), // Set the directory to serve static assets
     hot: true, // Enable hot module replacement
     historyApiFallback: true, // Enable HTML5 routing

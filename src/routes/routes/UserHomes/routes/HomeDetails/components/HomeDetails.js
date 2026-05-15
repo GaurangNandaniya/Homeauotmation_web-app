@@ -1,94 +1,57 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   useNavigate,
   useOutlet,
   useOutletContext,
   useParams,
+  useLocation,
 } from "react-router-dom";
 import _ from "lodash";
-import { Box, Typography, useTheme } from "@mui/material";
-import {
-  ChevronRightRounded,
-  MeetingRoomRounded,
-  LockPersonRounded,
-} from "@mui/icons-material";
+import { Box, Tabs, Tab } from "@mui/material";
 import { TopBar } from "commonComponents";
-import { AppContext } from "contextAPI/contextAPI";
 import { USER_ROLE_GUEST } from "constants/stringConstatnts";
-import tokens from "../../../../../../theme/tokens";
-
-const MenuCard = ({ icon: Icon, title, subtitle, onClick }) => {
-  const theme = useTheme();
-  return (
-    <Box
-      onClick={onClick}
-      sx={{
-        bgcolor: theme.palette.surfaceContainer,
-        color: theme.palette.text.primary,
-        borderRadius: tokens.card.borderRadius,
-        p: 2,
-        cursor: "pointer",
-        display: "flex",
-        alignItems: "center",
-        gap: 2,
-        transition: "background-color 0.18s ease",
-        "&:hover": { bgcolor: theme.palette.surfaceContainerHigh },
-      }}
-    >
-      <Box
-        sx={{
-          width: 44,
-          height: 44,
-          borderRadius: 999,
-          bgcolor: theme.palette.primaryContainer,
-          color: theme.palette.onPrimaryContainer,
-          display: "grid",
-          placeItems: "center",
-          flexShrink: 0,
-        }}
-      >
-        <Icon fontSize="small" />
-      </Box>
-      <Box sx={{ flex: 1, minWidth: 0 }}>
-        <Typography variant="body2" sx={{ fontWeight: 600 }} noWrap>
-          {title}
-        </Typography>
-        {subtitle && (
-          <Typography
-            variant="caption"
-            sx={{
-              color: "text.secondary",
-              textTransform: "none",
-              letterSpacing: 0,
-            }}
-          >
-            {subtitle}
-          </Typography>
-        )}
-      </Box>
-      <ChevronRightRounded sx={{ color: "text.secondary" }} />
-    </Box>
-  );
-};
 
 const HomeDetails = () => {
   const ctx = useOutletContext() || {};
   const { userHomes = [], openSettings } = ctx;
   const { homeId = "" } = useParams();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
-  const userHome = _.find(userHomes, (home) => home.id == homeId);
+  const userHome = useMemo(
+    () => _.find(userHomes, (home) => home.id == homeId),
+    [userHomes, homeId]
+  );
   const isGuest = _.get(userHome, "user_role") === USER_ROLE_GUEST;
 
   const childcomp = useOutlet({ userHome, openSettings });
 
+  // Redirect bare /userHomes/:homeId → /rooms (default tab).
+  const basePath = `/userHomes/${homeId}`;
   useEffect(() => {
-    if (!_.isNil(userHomes) && !_.some(userHomes, (h) => h.id == homeId)) {
+    if (
+      !_.isNil(userHomes) &&
+      !_.some(userHomes, (h) => h.id == homeId)
+    ) {
       navigate("/");
+      return;
     }
-  }, [userHomes, homeId, navigate]);
+    if (pathname === basePath || pathname === `${basePath}/`) {
+      navigate("./rooms", { replace: true });
+    }
+  }, [userHomes, homeId, pathname, basePath, navigate]);
 
-  if (childcomp) return childcomp;
+  // When inside RoomDetails (deeper than /rooms), RoomDetails owns the screen
+  // — render only its outlet, skip tabs and TopBar.
+  const inRoomDetail = /\/rooms\/[^/]+$/.test(pathname);
+  if (inRoomDetail) return childcomp;
+
+  const activeTab = pathname.includes("/access-controll") ? "access" : "rooms";
+
+  const onTabChange = (_e, val) => {
+    if (val === "rooms") navigate("./rooms");
+    else navigate("./access-controll");
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
@@ -97,27 +60,22 @@ const HomeDetails = () => {
         onBackClick={() => navigate("/userHomes")}
         onSettingsClick={openSettings}
       />
-      <Box sx={{ p: 2, overflowY: "auto", flex: 1 }}>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <MenuCard
-            icon={MeetingRoomRounded}
-            title="Rooms"
-            subtitle={
-              userHome?.room_count
-                ? `${userHome.room_count} room${userHome.room_count === 1 ? "" : "s"}`
-                : "No rooms yet"
-            }
-            onClick={() => navigate("./rooms")}
-          />
-          {!isGuest && (
-            <MenuCard
-              icon={LockPersonRounded}
-              title="Access control"
-              subtitle="Share this home with others"
-              onClick={() => navigate("./access-controll")}
-            />
-          )}
-        </Box>
+      <Tabs
+        value={activeTab}
+        onChange={onTabChange}
+        sx={{
+          px: 2,
+          borderBottom: 1,
+          borderColor: "divider",
+          minHeight: 44,
+          "& .MuiTab-root": { textTransform: "none", minHeight: 44 },
+        }}
+      >
+        <Tab value="rooms" label="Rooms" />
+        {!isGuest && <Tab value="access" label="Access" />}
+      </Tabs>
+      <Box sx={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", minHeight: 0 }}>
+        {childcomp}
       </Box>
     </Box>
   );
