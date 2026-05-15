@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Modal as ModalComp, Box } from "@mui/material";
 import _ from "lodash";
+import tokens from "../../theme/tokens";
 
 const Modal = (props) => {
   const { onClose, children, sx } = props;
@@ -20,8 +21,9 @@ const Modal = (props) => {
           border: 1,
           borderColor: "divider",
           boxShadow: 24,
-          borderRadius: 4,
-          p: 2.5,
+          borderRadius: tokens.surface.borderRadius,
+          px: tokens.surface.paddingX,
+          py: tokens.surface.paddingY,
           ...sx,
         }}
       >
