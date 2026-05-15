@@ -63,10 +63,10 @@ const HomeDetails = () => {
       <Tabs
         value={activeTab}
         onChange={onTabChange}
+        centered
         sx={{
-          px: 2,
           minHeight: 44,
-          "& .MuiTab-root": { textTransform: "none", minHeight: 44 },
+          "& .MuiTab-root": { textTransform: "none", minHeight: 44, px: 3 },
         }}
       >
         <Tab value="rooms" label="Rooms" />
