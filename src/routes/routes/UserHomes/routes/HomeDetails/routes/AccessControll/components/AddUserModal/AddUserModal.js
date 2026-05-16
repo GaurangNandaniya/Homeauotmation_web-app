@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import classes from "./AddUserModal.scss";
-import { Button, DropDownMenu, Loader, Modal } from "commonComponents";
-import { TextField, Typography } from "@mui/material";
+import { Button, DropDownMenu, Modal } from "commonComponents";
+import { Box, CircularProgress, TextField, Typography } from "@mui/material";
 import { isValidEmail } from "utils/stringUtils";
 import {
   addUserHomeAccess,
@@ -103,7 +103,9 @@ const AddUserModal = (props) => {
           </Typography>
         </div>
         {isLoading ? (
-          <Loader />
+          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+            <CircularProgress size={32} />
+          </Box>
         ) : showErrorMessage ? (
           <Typography
             variant="h5"
