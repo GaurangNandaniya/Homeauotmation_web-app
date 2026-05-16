@@ -1,8 +1,40 @@
-.container{
+.container {
     display: flex;
     flex-direction: column;
     flex: 1;
     justify-content: center;
     align-items: center;
-    row-gap: 12px;
+    row-gap: 8px;
+    padding: 24px 16px;
+    // Ensure it fills the parent height for vertical centering
+    min-height: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.illustration {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    margin-bottom: 8px;
+    opacity: 0.9;
+    // Subtle floating animation
+    animation: float 3.5s ease-in-out infinite;
+}
+
+.title {
+    font-weight: 600 !important;
+    opacity: 0.85;
+}
+
+.description {
+    opacity: 0.55;
+    max-width: 240px;
+    line-height: 1.5 !important;
+}
+
+@keyframes float {
+    0%   { transform: translateY(0px); }
+    50%  { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
 }

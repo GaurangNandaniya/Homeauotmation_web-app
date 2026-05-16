@@ -31,6 +31,10 @@ module.exports = {
         },
       },
       {
+        test: /\.(png|jpe?g|gif|svg|webp)$/i,
+        type: "asset/resource",
+      },
+      {
         test: /\.scss$/,
         use: [
           "style-loader",

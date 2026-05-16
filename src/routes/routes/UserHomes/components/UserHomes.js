@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import emptyHomesIllustration from "assets/empty-homes-bg-less.png";
 import { Box, Typography } from "@mui/material";
 import { AddRounded } from "@mui/icons-material";
 import { useFetchData } from "hooks";
@@ -105,7 +106,7 @@ const UserHomes = () => {
         showBack={false}
         onSettingsClick={openSettings}
       />
-      <Box sx={{ p: 2, overflowY: "auto", flex: 1 }}>
+      <Box sx={{ p: 2, overflowY: "auto", flex: 1, display: "flex", flexDirection: "column" }}>
         {isLoading ? (
           <SkeletonTileGrid count={6} />
         ) : _.isEmpty(userHomes) ? (
@@ -114,6 +115,8 @@ const UserHomes = () => {
             onButtonClick={onCreateHomeClick}
             showButton
             title="No homes yet"
+            description="Add your first home to start controlling your smart devices."
+            illustration={emptyHomesIllustration}
           />
         ) : (
           <Box sx={{ display: "flex", flexDirection: "column", gap: tokens.grid.sectionGap }}>

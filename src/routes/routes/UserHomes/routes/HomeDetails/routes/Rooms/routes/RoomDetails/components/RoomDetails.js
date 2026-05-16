@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import emptySwitchesIllustration from "assets/empty-switches-bg-less.png";
 import _ from "lodash";
 import { Box, Typography } from "@mui/material";
 import { AddRounded, PowerSettingsNewRounded } from "@mui/icons-material";
@@ -126,7 +127,7 @@ const RoomDetails = () => {
         onBackClick={() => navigate(`/userHomes/${homeId}/rooms`)}
         onSettingsClick={openSettings}
       />
-      <Box sx={{ p: 2, overflowY: "auto", flex: 1 }}>
+      <Box sx={{ p: 2, overflowY: "auto", flex: 1, display: "flex", flexDirection: "column" }}>
         {roomSwitchesIsLoading ? (
           <SkeletonTileGrid count={6} />
         ) : _.isEmpty(roomSwitches) ? (
@@ -135,6 +136,8 @@ const RoomDetails = () => {
             onButtonClick={onAddSwitchClick}
             showButton={!isGuest}
             title="No switches yet"
+            description="Connect your microcontroller and add switches to control your devices."
+            illustration={emptySwitchesIllustration}
           />
         ) : (
           <>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import emptyRoomsIllustration from "assets/empty-rooms-bg-less.png";
 import _ from "lodash";
 import { Box, Typography } from "@mui/material";
 import { AddRounded } from "@mui/icons-material";
@@ -89,6 +90,8 @@ const Rooms = () => {
           onButtonClick={onCreateRoomClick}
           showButton={!isGuest}
           title="No rooms yet"
+          description="Organise your home by adding rooms and assigning switches."
+          illustration={emptyRoomsIllustration}
         />
       ) : (
         <>

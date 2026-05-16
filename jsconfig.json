@@ -12,7 +12,9 @@
         "constants/*":["./src/constants/*"],
         "contextAPI/*":["./src/contextAPI/*"],
         "HOCs":["./src/HOCs"],
-        "RoomDetails/*":["./src/routes/routes/UserHomes/routes/HomeDetails/routes/Rooms/routes/RoomDetails/*"]
+        "RoomDetails/*":["./src/routes/routes/UserHomes/routes/HomeDetails/routes/Rooms/routes/RoomDetails/*"],
+        "assets/*": ["./src/assets/*"],
+        "assets": ["./src/assets"]
       }
     },
     "exclude": ["node_modules", "build","dist"],
