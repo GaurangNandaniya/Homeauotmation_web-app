@@ -1,10 +1,32 @@
 const path = require("path");
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const {
   generateWebpackAliasesFromJsConfig,
 } = require("../Scripts/generateWebpackPathResolve");
+
+// Emits Netlify's SPA fallback rewrite into the publish folder so client-side
+// routes survive a hard refresh regardless of how the site is deployed.
+class NetlifyRedirectsPlugin {
+  apply(compiler) {
+    compiler.hooks.thisCompilation.tap("NetlifyRedirectsPlugin", (compilation) => {
+      compilation.hooks.processAssets.tap(
+        {
+          name: "NetlifyRedirectsPlugin",
+          stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
+        },
+        () => {
+          compilation.emitAsset(
+            "_redirects",
+            new webpack.sources.RawSource("/*    /index.html   200\n")
+          );
+        }
+      );
+    });
+  }
+}
 
 module.exports = {
   entry: path.resolve(__dirname, "../src/index.js"),
@@ -58,6 +80,7 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "styles.css",
     }),
+    new NetlifyRedirectsPlugin(),
   ],
   resolve: {
     modules: ["../src", "node_modules"],
